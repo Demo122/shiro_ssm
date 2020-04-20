@@ -38,7 +38,7 @@
 
 <script type="text/html" id="switchTpl">
     <!-- 这里的 checked 的状态只是演示 -->
-    <input type="checkbox" name="status" user_id="{{d.id}}" lay-skin="switch" lay-text="开启|禁用" lay-filter="status" {{
+    <input type="checkbox" name="status" user_id="{{d.id}}" id="checkstatus" lay-skin="switch" lay-text="开启|禁用" lay-filter="status" {{
            d.status== true ? 'checked' : '' }}>
 </script>
 
@@ -97,6 +97,7 @@
         table.on('tool(demo)', function (obj) {
             var data = obj.data;
             if (obj.event === 'detail') {
+                //查看权限
                 var url = "/user/getUserRoles/" + data.id;
                 $.get(url, function (result) {
 
@@ -121,12 +122,8 @@
                                 layer.alert("删除成功");
                                 obj.del();
                             }
-                            if (result.code==2) {
-                                layer.alert("删除失败");
-                            }
-                            if (result.code==-1) {
-                                layer.alert(result.msg);
-                            }
+                            //无权限，或者删除失败
+                            layer.alert(result.msg);
                         },
                         error: function (result) {
                             layer.alert("删除失败");
@@ -173,12 +170,19 @@
                         data: JSON.stringify(jsonDate),
                         dataType: "json",
                         contentType: "application/json;charset=UTF-8",
-                        success: function (result) {
-                            if (result.code) {
+                        success: function (res) {
+                            //如果没有权限  或者
+                            if(res.code==-1){
+                                layer.alert(res.msg);
+                            }
+                            //更新成功
+                            if (res.code==1){
                                 layer.alert("开启成功！");
                                 //重载表格
                                 table.reload('userTable');
-                            } else {
+                            }
+                            //开启失败
+                            if(res.code==2){
                                 layer.alert("开启失败！");
                             }
                         },
@@ -199,12 +203,19 @@
                         data: JSON.stringify(jsonDate),
                         dataType: "json",
                         contentType: "application/json;charset=UTF-8",
-                        success: function (result) {
-                            if (result.code) {
+                        success: function (res) {
+                            //如果没有权限
+                            if(res.code==-1){
+                                layer.alert(res.msg);
+                            }
+                            //禁用成功
+                            if (res.code==1){
                                 layer.alert("禁用成功！");
                                 //重载表格
                                 table.reload('userTable');
-                            } else {
+                            }
+                            // 禁用失败
+                            if(res.code==2){
                                 layer.alert("禁用失败！");
                             }
                         },
@@ -224,11 +235,12 @@
                         dataType: "json",
                         contentType: "application/json;charset=UTF-8",
                         success: function (result) {
-                            if (result.code) {
+                            if (result.code==1) {
                                 layer.alert("删除成功");
                                 //重载表格
                                 table.reload('userTable');
-                            } else {
+                            }
+                            if(result.code==2){
                                 layer.alert("删除失败");
                             }
                         },
@@ -247,19 +259,27 @@
             var id = $(this).attr("user_id");
             var status = obj.elem.checked;
             var jsonData = {"id": id, "status": status};
-            $.get(
-                "/user/updateUser",
+            //直接发送的jsond对象 其实就是form表单提交参数
+            $.post(
+                "/user/updateUserStatus",
                 jsonData,function (res) {
-                    //将string转json对象
-                    layer.msg(JSON.parse(res).msg);
-                    // console.log(res.msg);
+                    //如果没有权限  或者   更新失败
+                    if(res.code==-1 || res.code==2){
+                        layer.alert(res.msg);
+                        //重载表格
+                        table.reload('userTable');
+                    }
+                    //更新成功
+                    if (res.code==1){
+                        layer.msg(res.msg);
+                        if (obj.elem.checked) {
+                            layer.tips("已开启", obj.othis);
+                        } else {
+                            layer.tips("已关闭", obj.othis);
+                        }
+                    }
                 }
             );
-            if (obj.elem.checked) {
-                layer.tips("已开启", obj.othis);
-            } else {
-                layer.tips("已关闭", obj.othis);
-            }
 
         });
 
