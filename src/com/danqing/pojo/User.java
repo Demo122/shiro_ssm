@@ -7,6 +7,8 @@ public class User {
 
     private String password;
 
+    private String email;
+
     private String salt;
 
     private Boolean status;
@@ -21,11 +23,20 @@ public class User {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
                 ", salt='" + salt + '\'' +
                 ", status=" + status +
                 ", description='" + description + '\'' +
                 ", activeCode='" + activeCode + '\'' +
                 '}';
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Boolean getStatus() {
