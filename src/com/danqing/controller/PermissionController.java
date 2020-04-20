@@ -1,13 +1,13 @@
 package com.danqing.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.PageHelper;
-import com.danqing.pojo.Permission;
-import com.danqing.pojo.RolePermission;
+import com.danqing.pojo.*;
 import com.danqing.service.PermissionService;
 import com.danqing.service.RolePermissionService;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -47,30 +47,60 @@ public class PermissionController {
 //        return "editPermission";
 //    }
 
+    @ResponseBody
     @RequestMapping("updatePermission")
-    public String update(Permission permission) {
-
-        permissionService.update(permission);
-        return "redirect:listPermission";
+    public String update(@RequestBody Permission permission) {
+        ResponseJSON res=new ResponseJSON();
+        try{
+            permissionService.update(permission);
+            res.setCode(ResponseStatusEnum.Do_SUCCESSFUL.getStatus());
+            res.setMsg("update permission successfuly!");
+        }catch (Exception e){
+            res.setCode(ResponseStatusEnum.Do_FAIELD.getStatus());
+            res.setMsg("update permission failed!");
+        }
+        return JSONObject.toJSON(res).toString();
     }
 
 
     //删除权限
     @ResponseBody
-    @RequestMapping(value = "deletePermission",method = RequestMethod.DELETE)
+    @RequestMapping(value = "deletePermission", method = RequestMethod.DELETE)
     public Map delete(@RequestBody long id) {
-        Map<String,Object> res=new HashMap<>();
-        try{
+        Map<String, Object> res = new HashMap<>();
+        try {
             //1.删除权限表中的权限
             permissionService.delete(id);
             //2.删除与权限表关联的role_permission表中的 记录
             rolePermissionService.deleteByPermission(id);
-            res.put("msg","删除权限成功！");
+            res.put("msg", "删除权限成功！");
 
-        }catch (Exception e){
-            res.put("msg","删除权限失败！");
+        } catch (Exception e) {
+            res.put("msg", "删除权限失败！");
         }
         return res;
+    }
+
+    //批量删除权限
+    @ResponseBody
+    @RequestMapping(value = "deleteSelectPermission", method = RequestMethod.DELETE)
+    public String deleteSelectPermission(@RequestBody Ids ids) {
+        ResponseJSON res=new ResponseJSON();
+        try {
+            for (long id : ids.getIds()) {
+                //1.删除权限表中的权限
+                permissionService.delete(id);
+                //2.删除与权限表关联的role_permission表中的 记录
+                rolePermissionService.deleteByPermission(id);
+            }
+            res.setCode(ResponseStatusEnum.Do_SUCCESSFUL.getStatus());
+            res.setMsg("删除权限成功！");
+        } catch (Exception e) {
+            res.setCode(ResponseStatusEnum.Do_FAIELD.getStatus());
+            res.setMsg("删除权限失败！");
+        }
+
+        return JSONObject.toJSON(res).toString();
     }
 
     @RequestMapping("addPermissionPage")
@@ -92,7 +122,7 @@ public class PermissionController {
             //2.将新权限赋给admin
 
             //从数据库中获取新权限，主要是获取新权限的id，因为数据库中的id是设置自增，必须存入再取
-            Permission newPermission=permissionService.get(permission.getName());
+            Permission newPermission = permissionService.get(permission.getName());
 
             RolePermission rolePermission = new RolePermission();
             rolePermission.setPid(newPermission.getId());
@@ -111,5 +141,13 @@ public class PermissionController {
         return res;
     }
 
+    @RequestMapping("editPermissionPage/{id}")
+    public String editPermissionPage(Model model, Permission permission) {
+        Permission p = permissionService.get(permission.getId());
+
+        model.addAttribute("permission",p);
+
+        return "editPermission";
+    }
 
 }
