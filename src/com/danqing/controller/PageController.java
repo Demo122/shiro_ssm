@@ -34,7 +34,7 @@ public class PageController {
     public String index(Model model, HttpServletRequest req) {
 
         String name = (String) req.getSession().getAttribute("name");
-        System.out.println(name);
+//        System.out.println(name);
 
         List<Role> roles = roleService.listRoles(name);
         List<Permission> ps = new ArrayList<>();
