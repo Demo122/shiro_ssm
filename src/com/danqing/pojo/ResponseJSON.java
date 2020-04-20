@@ -7,6 +7,15 @@ package com.danqing.pojo;
 public class ResponseJSON {
     private int code;
     private String msg;
+    private String url;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public int getCode() {
         return code;
