@@ -58,8 +58,10 @@
                 }
                 if (/^\d+\d+\d$/.test(value)) {
                     return '用户名不能全为数字';
-                }if(/^.{0,6}$/.test(value)){
-                    return '用户名长度不能小于6'
+                }if(/^.{0,2}$/.test(value)){
+                    return '用户名长度要大于2';
+                }if(/^.{6,}$/.test(value)){
+                    return '用户名长度要小于6';
                 }
             }
 
