@@ -122,7 +122,7 @@ public class UserController {
 //        //使用map来接受多对象参数，或者使用包装类
         User user=userExt.getUser();
 
-        long[] roleIds=userExt.getRoleIds().getRoleIds();
+        long[] roleIds=userExt.getRoleIds().getIds();
 //
         System.out.println(user.toString()+"--"+roleIds.toString());
         //设置用户角色
