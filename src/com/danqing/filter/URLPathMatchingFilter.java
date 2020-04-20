@@ -1,6 +1,8 @@
 package com.danqing.filter;
 
 import com.alibaba.fastjson.JSON;
+import com.danqing.pojo.ResponseJSON;
+import com.danqing.pojo.ResponseStatusEnum;
 import com.danqing.service.PermissionService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
@@ -12,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 public class URLPathMatchingFilter extends PathMatchingFilter {
@@ -65,9 +65,13 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
 
                 //ajax请求就返回json
                 if (isAjax){
-                    Map<String,Object> resJSON=new HashMap<>();
-                    resJSON.put("msg",ex.getMessage());
-                    resJSON.put("code",-1);
+//                    Map<String,Object> resJSON=new HashMap<>();
+//                    resJSON.put("msg",ex.getMessage());
+//                    resJSON.put("code",-1);
+                    ResponseJSON resJSON=new ResponseJSON();
+                    resJSON.setCode(ResponseStatusEnum.NO_Authority.getStatus());
+                    resJSON.setMsg(ex.getMessage());
+
                     response.setContentType("application/json; charset=utf-8");//返回json
                     response.getWriter().write(JSON.toJSONString(resJSON));
                 }else{
