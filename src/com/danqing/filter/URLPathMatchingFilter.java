@@ -61,7 +61,7 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
                 HttpServletRequest httpServletRequest = (HttpServletRequest) request;
                 String header = httpServletRequest.getHeader("X-Requested-With");
                 boolean isAjax = "XMLHttpRequest".equals(header) ? true:false;
-                System.out.println("是不是ajax："+isAjax);
+//                System.out.println("是不是ajax："+isAjax);
 
                 //ajax请求就返回json
                 if (isAjax){
