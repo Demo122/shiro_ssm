@@ -74,9 +74,9 @@
             , cols: [[ //表头
                 {type: 'checkbox'}
                 , {field: 'id', title: 'ID', width: 80, sort: true}
-                , {field: 'name', title: '用户名', width: 100}
+                , {field: 'name', title: '用户名', width: 120}
                 , {field: 'password', title: '密码', width: 300}
-                , {field: 'salt', title: '盐', width: 250}
+                , {field: 'email', title: '邮箱', width: 230}
                 , {field: 'status', title: '开启', width: 100, templet: '#switchTpl'}
                 , {field: 'description', title: '描述', width: 150}
                 , {field: 'activeCode', title: '激活码', width: 150}
