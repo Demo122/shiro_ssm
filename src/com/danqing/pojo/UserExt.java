@@ -6,7 +6,7 @@ package com.danqing.pojo;
  */
 public class UserExt {
     private User user;
-    private RoleIds roleIds;
+    private Ids roleIds;
 
     @Override
     public String toString() {
@@ -24,11 +24,11 @@ public class UserExt {
         this.user = user;
     }
 
-    public RoleIds getRoleIds() {
+    public Ids getRoleIds() {
         return roleIds;
     }
 
-    public void setRoleIds(RoleIds roleIds) {
+    public void setRoleIds(Ids roleIds) {
         this.roleIds = roleIds;
     }
 }
