@@ -22,13 +22,16 @@
 
 <div class="layui-container layui-col-md10" style="margin-top: 20px;">
     <div class="layui-row">
+        <button type="button" class="layui-btn layui-btn-normal" id="addPermissionPage"><i class="layui-icon"></i>添加权限
+        </button>
+    </div>
+    <div class="layui-row">
         <table class="layui-hide" id="permissionTable" lay-filter="demo"></table>
     </div>
 </div>
 
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm layui-btn-normal" id="addUserPage"><i class="layui-icon"></i>添加权限</button>
         <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="deleteAllUser">全部删除</button>
     </div>
 </script>
@@ -47,7 +50,6 @@
 </script>
 
 
-
 <script src="../../static/layui/layui.js" charset="utf-8"></script>
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 <script>
@@ -62,7 +64,7 @@
             , height: 516
             , width: 1340
             , toolbar: '#toolbarDemo'
-            ,defaultToolbar: ['filter', 'exports', 'print']
+            , defaultToolbar: ['filter', 'exports', 'print']
             , url: '/permission/listPermission' //数据接口
             , page: true //开启分页
             , request: {
@@ -70,12 +72,12 @@
                 , limitName: 'nums' //每页数据量的参数名，默认：limit
             }
             , cols: [[ //表头
-                  {type: 'checkbox',width:80}
+                {type: 'checkbox', width: 80}
                 , {field: 'id', title: 'ID', width: 80, sort: true}
                 , {field: 'name', title: '名称', width: 200}
                 , {field: 'category', title: '类别', width: 150}
                 , {field: 'url', title: '访问链接', width: 300}
-                , {field: 'menu', title: '是否菜单', width: 120,sort: true, templet: '#menu'}
+                , {field: 'menu', title: '是否菜单', width: 120, sort: true, templet: '#menu'}
                 , {field: 'desc_', title: '描述', width: 200}
                 , {fixed: 'right', width: 200, align: 'center', toolbar: '#barDemo'}
             ]]
@@ -94,18 +96,18 @@
         table.on('tool(demo)', function (obj) {
             var data = obj.data;
             if (obj.event === 'del') {
-                layer.confirm('真的删除'+data.name+'么?', function (index) {
+                layer.confirm('真的删除' + data.name + '么?', function (index) {
                     $.ajax({
-                        type:"DELETE",
-                        url:"/permission/deletePermission",
-                        data:JSON.stringify(data.id),
+                        type: "DELETE",
+                        url: "/permission/deletePermission",
+                        data: JSON.stringify(data.id),
                         dataType: "json",
                         contentType: "application/json;charset=UTF-8",
                         success: function (result) {
                             layer.msg(result.msg);
                             obj.del();
                         },
-                        error:function (result) {
+                        error: function (result) {
                             layer.alert(result.msg);
                         }
                     });
@@ -117,46 +119,44 @@
         });
 
         //工具栏事件
-        table.on('toolbar(demo)', function(obj){
+        table.on('toolbar(demo)', function (obj) {
             var checkStatus = table.checkStatus(obj.config.id);
-            switch(obj.event){
-                case 'getCheckData':
-                    var data = checkStatus.data;
-                    layer.alert(JSON.stringify(data));
-                    break;
+            switch (obj.event) {
                 case 'getCheckLength':
                     var data = checkStatus.data;
-                    layer.msg('选中了：'+ data.length + ' 个');
+                    layer.msg('选中了：' + data.length + ' 个');
                     break;
                 case 'deleteAllUser':
                     var data = checkStatus.data;
                     $.ajax({
-                        type:"DELETE",
-                        url:"/config/deleteSelectUser",
-                        data:JSON.stringify(data),
+                        type: "DELETE",
+                        url: "/config/deleteSelectUser",
+                        data: JSON.stringify(data),
                         dataType: "json",
                         contentType: "application/json;charset=UTF-8",
                         success: function (result) {
-                            if (result.code){
+                            if (result.code) {
                                 layer.alert("删除成功");
 
-                            }else {
+                            } else {
                                 layer.alert("删除失败");
                             }
                         },
-                        error:function (result) {
+                        error: function (result) {
                             layer.alert("删除失败");
                         }
                     });
                     //重载表格
                     table.reload('userTable');
                     break;
-            };
+            }
+            ;
         });
 
         $(function () {
-            $("#addUserPage").click(function () {
-               layer.open({
+            $("#addPermissionPage").click(function () {
+                var url = '/permission/addPermissionPage';
+                layer.open({
                     type: 2,
                     fix: false, //不固定
                     area: ['700px', '500px'],
@@ -165,12 +165,12 @@
                     shade: 0.4,
                     title: '添加权限',
                     // content: '../../static/pages/addUser.jsp'
-                    content:'/permission/addPermissionPage',
+                    content: url,
                     //end - 层销毁后触发的回调
-                    end:function () {
+                    end: function () {
                         //重载表格
-                       table.reload('permissionTable');
-                   }
+                        table.reload('permissionTable');
+                    }
                 });
             });
 

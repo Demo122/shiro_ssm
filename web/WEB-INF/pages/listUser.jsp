@@ -117,11 +117,15 @@
                         dataType: "json",
                         contentType: "application/json;charset=UTF-8",
                         success: function (result) {
-                            if (result.code) {
+                            if (result.code==1) {
                                 layer.alert("删除成功");
                                 obj.del();
-                            } else {
+                            }
+                            if (result.code==2) {
                                 layer.alert("删除失败");
+                            }
+                            if (result.code==-1) {
+                                layer.alert(result.msg);
                             }
                         },
                         error: function (result) {

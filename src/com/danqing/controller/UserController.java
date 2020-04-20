@@ -80,9 +80,9 @@ public class UserController {
         Map<String, Object> res = new HashMap<>();
         try {
             userService.delete(id);
-            res.put("code", true);
+            res.put("code", 1);
         } catch (Exception e) {
-            res.put("code", false);
+            res.put("code", 2);
         }
         return JSONObject.toJSON(res).toString();
     }

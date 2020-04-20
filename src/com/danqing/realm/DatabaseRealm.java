@@ -24,7 +24,7 @@ public class DatabaseRealm extends AuthorizingRealm {
     private PermissionService permissionService;
 
     @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection)  {
         // 能进入到这里，表示账号已经通过验证了
         String userName = (String) principalCollection.getPrimaryPrincipal();
         // 通过service获取角色和权限

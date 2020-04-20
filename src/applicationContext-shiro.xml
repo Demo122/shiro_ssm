@@ -15,6 +15,8 @@
     <!-- url过滤器 -->
     <bean id="urlPathMatchingFilter" class="com.danqing.filter.URLPathMatchingFilter"/>
 
+
+
     <!-- 配置shiro的过滤器工厂类，id- shiroFilter要和我们在web.xml中配置的过滤器一致 -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <!-- 调用我们配置的权限管理器 -->
@@ -42,6 +44,8 @@
                 /doLogout=logout
                 <!--所有的请求(除去配置的静态资源请求或请求地址为anon的请求)都要通过过滤器url -->
                 /** = url
+
+
             </value>
         </property>
     </bean>

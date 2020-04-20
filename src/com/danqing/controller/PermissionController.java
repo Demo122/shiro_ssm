@@ -61,7 +61,10 @@ public class PermissionController {
     public Map delete(@RequestBody long id) {
         Map<String,Object> res=new HashMap<>();
         try{
+            //1.删除权限表中的权限
             permissionService.delete(id);
+            //2.删除与权限表关联的role_permission表中的 记录
+            rolePermissionService.deleteByPermission(id);
             res.put("msg","删除权限成功！");
 
         }catch (Exception e){
@@ -80,7 +83,7 @@ public class PermissionController {
     @ResponseBody
     @RequestMapping(value = "addPermission", method = RequestMethod.POST)
     public Map addPermission(@RequestBody Permission permission) {
-        System.out.println(permission);
+//        System.out.println(permission);
 
         Map<String, Object> res = new HashMap<>();
         try {
@@ -95,12 +98,13 @@ public class PermissionController {
             rolePermission.setPid(newPermission.getId());
             //admin角色id为1
             rolePermission.setRid((long) 1);
+
             //添加角色权限
             rolePermissionService.addPermission(rolePermission);
 
-
             res.put("msg", "添加成功");
         } catch (Exception e) {
+
             res.put("msg", "添加失败");
         }
 

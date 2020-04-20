@@ -44,8 +44,6 @@ public class PageController {
                     ps.add(permission);
                     System.out.println(permission.getName());
                 }
-                System.out.println(permission.toString());
-                System.out.println("-------------------");
             }
 
         }

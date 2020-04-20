@@ -17,21 +17,21 @@
     <form class="layui-form" action="">
         <div class="layui-form-item">
             <label class="layui-form-label">权限名称</label>
-            <div class="layui-input-inline" >
+            <div class="layui-input-inline">
                 <input type="text" name="name" required lay-verify="name" placeholder="权限名称" autocomplete="off"
                        class="layui-input">
             </div>
         </div>
 
-        <div class="layui-form-item" >
+        <div class="layui-form-item">
             <label class="layui-form-label">访问链接</label>
             <div class="layui-input-inline">
-                <input type="text" name="url" required  placeholder="访问链接"
-                       autocomplete="off"   class="layui-input">
+                <input type="text" name="url" required placeholder="访问链接"
+                       autocomplete="off" class="layui-input">
             </div>
 
         </div>
-        <div class="layui-form-item" >
+        <div class="layui-form-item">
             <label class="layui-form-label">类别</label>
             <div class="layui-input-inline">
                 <select name="category" lay-verify="">
@@ -83,7 +83,8 @@
                 }
                 if (/^\d+\d+\d$/.test(value)) {
                     return '用户名不能全为数字';
-                }if(/^.{0,6}$/.test(value)){
+                }
+                if (/^.{0,6}$/.test(value)) {
                     return '用户名长度不能小于6'
                 }
             }
@@ -98,7 +99,7 @@
 
         //监听提交
         form.on('submit(formDemo)', function (data) {
-             layer.msg(JSON.stringify(data.field));
+            // layer.msg(JSON.stringify(data.field));
             $.ajax({
                 type: "POST",
                 url: "/permission/addPermission",
@@ -106,9 +107,9 @@
                 dataType: "json",
                 contentType: "application/json;charset=UTF-8",
                 success: function (result) {
-                    console.log(result.msg);
+                    // console.log(result.msg);
                     layer.msg(result.msg, {
-                            time: 300 //0.5秒关闭（如果不配置，默认是3秒）
+                            time: 500 //0.5秒关闭（如果不配置，默认是3秒）
                         },
                         function () {
                             //do something
