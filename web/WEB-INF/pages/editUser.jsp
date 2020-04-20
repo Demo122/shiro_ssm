@@ -23,15 +23,21 @@
         <div class="layui-form-item">
             <label class="layui-form-label">用户名</label>
             <div class="layui-input-inline">
-                <input type="text" name="name" value="${user.name}" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input type="text" name="name" value="${user.name}" required  lay-verify="username" placeholder="请输入标题" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">密码</label>
             <div class="layui-input-inline">
-                <input type="password" name="password" value="${user.password}" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                <input type="password" name="password" value="${user.password}" required lay-verify="password" placeholder="请输入密码" autocomplete="off" class="layui-input">
             </div>
             <div class="layui-form-mid layui-word-aux"></div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-inline">
+                <input type="text" name="email" value="${user.email}" lay-verify="eamilVerify" placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+            </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">角色</label>
@@ -74,6 +80,38 @@
     //Demo
     layui.use('form', function () {
         var form = layui.form;
+
+
+        //自定义的验证
+        form.verify({
+            eamilVerify: function(value, item){
+                //value：表单的值、item：表单的DOM对象
+                if(value!=""){  //值不是空的时候再去走验证
+                    if(!/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(value)){
+                        return '邮箱格式不正确';
+                    }
+                }
+            },
+            username: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                    return '用户名不能有特殊字符';
+                }
+                if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                    return '用户名首尾不能出现下划线\'_\'';
+                }
+                if (/^\d+\d+\d$/.test(value)) {
+                    return '用户名不能全为数字';
+                }if(/^.{8,}$/.test(value)){
+                    return '用户名长度要小于8';
+                }
+            },
+            password: [
+                /^[\S]{6,40}$/
+                , '密码必须6到40位，且不能出现空格'
+            ]
+
+        });
+
 
         //定义开关状态变量
         var status=null;
