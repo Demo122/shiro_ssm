@@ -42,7 +42,7 @@ public class PageController {
             for (Permission permission : permissionService.list(role)) {
                 if (permission != null && permission.getMenu()) {
                     ps.add(permission);
-                    System.out.println(permission.getName());
+//                    System.out.println(permission.getName());
                 }
             }
 
