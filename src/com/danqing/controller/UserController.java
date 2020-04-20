@@ -4,10 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.danqing.pojo.*;
 import com.github.pagehelper.PageHelper;
-import com.danqing.pojo.Role;
-import com.danqing.pojo.User;
-import com.danqing.pojo.UserExt;
 import com.danqing.service.RoleService;
 import com.danqing.service.UserRoleService;
 import com.danqing.service.UserService;
@@ -77,12 +75,15 @@ public class UserController {
     @RequestMapping(value = "deleteUser", method = RequestMethod.DELETE)
     public String delete(@RequestBody long id) {
 //        System.out.println(id);
-        Map<String, Object> res = new HashMap<>();
+        ResponseJSON res=new ResponseJSON();
         try {
             userService.delete(id);
-            res.put("code", 1);
+            //设置返回状态码，1成功，2失败，-1没有权限，在shiro的过滤器里已经设置返回了
+            res.setCode(ResponseStatusEnum.Do_SUCCESSFUL.getStatus());
+            res.setMsg("删除成功");
         } catch (Exception e) {
-            res.put("code", 2);
+            res.setCode(ResponseStatusEnum.Do_FAIELD.getStatus());
+            res.setMsg("删除失败");
         }
         return JSONObject.toJSON(res).toString();
     }
@@ -91,19 +92,29 @@ public class UserController {
     @RequestMapping(value = "deleteSelectUser", method = RequestMethod.DELETE)
     public String deleteSelectUser(@RequestBody List<Long> ids) {
 
-        Map<String, Object> res = new HashMap<>();
+        ResponseJSON res=new ResponseJSON();
         try {
             //删除选中用户
             for (Long id : ids) {
                 userService.delete(id);
             }
-            res.put("code", true);
+            res.setCode(ResponseStatusEnum.Do_SUCCESSFUL.getStatus());
+            res.setMsg("删除成功");
         } catch (Exception e) {
-            res.put("code", false);
+            res.setCode(ResponseStatusEnum.Do_FAIELD.getStatus());
+            res.setMsg("删除失败");
         }
         return JSONObject.toJSON(res).toString();
     }
 
+
+    /**
+     * 更新用户信息，包括 用户信息 和 用户角色信息
+     * 使用实体类来接受json字符串参数，这里使用的时包装类
+     * 这里传过来的json对象是嵌套了json对象的，jsonData={"user":data.field,"roleIds":roleIdsJSON};
+     *  jsonData中的key "user" 对应包装类中的user ，其value也是json对象，它的字段和user的属性一一对应
+     *  roleIds也是一样，只要这样才能注入
+     * */
     @ResponseBody
     @RequestMapping(value = "updateUser",method =RequestMethod.POST)
     public String update(@RequestBody UserExt userExt) {
@@ -190,18 +201,45 @@ public class UserController {
     }
 
 
+    /**
+     * @desceiption 更新选中的单个用户状态
+     *
+     * 接受客户端传来的jspn对象，其实就是from表单参数，key-value这种
+     * 然后通过request.getParam(key)获取，用注解就是@RequestParam
+     * @param status
+     * @param id
+     * @return
+     *
+     * 问题：@ResponseBody 不知为何响应消息类型是text/plain，
+     * 解决：在注解@RequestMapping增加一个produces参数项即可 produces="application/json;charset=UTF-8"
+     */
     @ResponseBody
-    @RequestMapping(value ="updateUser",method = RequestMethod.GET)
+    @RequestMapping(value ="updateUserStatus",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     public String updateUserStatus(@RequestParam Boolean status,@RequestParam long id){
 //        System.out.println(status+"--"+id);
+        ResponseJSON res=new ResponseJSON();
         User u=userService.get(id);
         u.setStatus(status);
-        userService.update(u);
-        Map<String,Object> res=new HashMap<>();
-        res.put("msg","update successfuly!");
+
+        try{
+            userService.update(u);
+            res.setCode(ResponseStatusEnum.Do_SUCCESSFUL.getStatus());
+            res.setMsg("update status successfuly!");
+        }catch (Exception e){
+            res.setCode(ResponseStatusEnum.Do_FAIELD.getStatus());
+            res.setMsg("update status failed!");
+        }
+
         return JSONObject.toJSON(res).toString();
     }
 
+
+    /**
+     * 更新选中的一组用户状态
+     * 接受json字符串，使用fastjson来转换
+     * @param str
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value ="updateSelectUserStatus",method = RequestMethod.POST)
     public String updateSelectUserStatus(@RequestBody String str){
@@ -216,17 +254,17 @@ public class UserController {
 
         System.out.println(status+"---"+ids.toString());
 
-        Map<String,Object> map=new HashMap<>();
+        ResponseJSON res=new ResponseJSON();
         try{
             for (long id : ids) {
                 User u=userService.get(id);
                 u.setStatus(status);
                 userService.update(u);
             }
-           map.put("code",true);
+            res.setCode(ResponseStatusEnum.Do_SUCCESSFUL.getStatus());
         }catch (Exception e){
-            map.put("code",false);
+            res.setCode(ResponseStatusEnum.Do_FAIELD.getStatus());
         }
-        return JSONObject.toJSON(map).toString() ;
+        return JSONObject.toJSON(res).toString() ;
     }
 }
