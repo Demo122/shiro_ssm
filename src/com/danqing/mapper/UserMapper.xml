@@ -5,6 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="salt" jdbcType="VARCHAR" property="salt" />
     <result column="status" jdbcType="BIT" property="status" />
     <result column="description" jdbcType="VARCHAR" property="description" />
@@ -40,7 +41,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, password, salt,status,description,activeCode
+    id, name, password,email, salt,status,description,activeCode
   </sql>
   <select id="selectByExample" parameterType="com.danqing.pojo.UserExample" resultMap="BaseResultMap">
     select
@@ -115,6 +116,9 @@
       </if>
       <if test="description != null">
         description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
