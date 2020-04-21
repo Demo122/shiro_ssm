@@ -36,7 +36,7 @@ public class LoginController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(@RequestBody User user) throws IOException {
 
-        System.out.println(user.toString());
+//        System.out.println(user.toString());
         //创建返回json的对象
         ResponseJSON res = new ResponseJSON();
 
