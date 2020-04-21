@@ -63,6 +63,10 @@
     delete from role_permission
     where id = #{id,jdbcType=BIGINT}
   </delete>
+  <delete id="deleteByRoleIdAndPermissionId" parameterType="com.danqing.pojo.RolePermission" >
+    delete from role_permission
+    where rid = #{rid,jdbcType=BIGINT} and  pid = #{pid,jdbcType=BIGINT}
+  </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.danqing.pojo.RolePermission" useGeneratedKeys="true">
     insert into role_permission (rid, pid)
     values (#{rid,jdbcType=BIGINT}, #{pid,jdbcType=BIGINT})

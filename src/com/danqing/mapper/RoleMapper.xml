@@ -104,4 +104,13 @@
       desc_ = #{desc_,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="getTotal" resultType="int">
+    SELECT COUNT(*) FROM `role`;
+  </select>
+  <select id="getByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from role
+    where name = #{name,jdbcType=VARCHAR}
+  </select>
 </mapper>

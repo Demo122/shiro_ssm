@@ -18,4 +18,8 @@ public interface RoleMapper {
     int updateByPrimaryKeySelective(Role record);
 
     int updateByPrimaryKey(Role record);
+
+    int getTotal();
+
+    Role getByName(String name);
 }
