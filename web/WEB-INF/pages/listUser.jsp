@@ -141,7 +141,7 @@
                     shadeClose: true,
                     shade: 0.4,
                     title: '编辑用户信息',
-                    content: 'editUserPage/' + data.id,
+                    content: '/user/editUserPage/' + data.id,
                     //end - 层销毁后触发的回调
                     end: function () {
                         //重载表格
@@ -305,8 +305,7 @@
 
         });
 
-    })
-    ;
+    });
 
 
 </script>
