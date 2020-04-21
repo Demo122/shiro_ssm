@@ -8,6 +8,7 @@ public class UserExt {
     private User user;
     private Ids roleIds;
 
+
     @Override
     public String toString() {
         return "UserExt{" +
@@ -31,4 +32,5 @@ public class UserExt {
     public void setRoleIds(Ids roleIds) {
         this.roleIds = roleIds;
     }
+
 }
