@@ -40,12 +40,6 @@ public class PermissionController {
         return JSONObject.toJSON(response).toString();
     }
 
-//    @RequestMapping("editPermission")
-//    public String list(Model model, long id) {
-//        Permission permission = permissionService.get(id);
-//        model.addAttribute("permission", permission);
-//        return "editPermission";
-//    }
 
     @ResponseBody
     @RequestMapping("updatePermission")
