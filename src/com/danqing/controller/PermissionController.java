@@ -141,6 +141,12 @@ public class PermissionController {
         return res;
     }
 
+    /**
+     * 编辑权限信息
+     * @param model
+     * @param permission
+     * @return
+     */
     @RequestMapping("editPermissionPage/{id}")
     public String editPermissionPage(Model model, Permission permission) {
         Permission p = permissionService.get(permission.getId());
@@ -150,4 +156,37 @@ public class PermissionController {
         return "editPermission";
     }
 
+    @ResponseBody
+    @RequestMapping(value = "checkPermissionName",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    public String checkPermissionName(String permissionName){
+        ResponseJSON res=new ResponseJSON();
+        Permission p=permissionService.get(permissionName);
+        if (p!=null){
+            //不空，说明有这个权限名
+            res.setCode(ResponseStatusEnum.Do_FAIELD.getStatus());
+            res.setMsg("权限名已存在！");
+        }else {
+            res.setCode(ResponseStatusEnum.Do_SUCCESSFUL.getStatus());
+            res.setMsg("权限名可用！");
+        }
+
+        return JSONObject.toJSON(res).toString();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "checkUrl",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    public String checkUrl(String url){
+        ResponseJSON res=new ResponseJSON();
+        Permission p=permissionService.getByUrl(url);
+        if (p!=null){
+            //不空，说明有这个url
+            res.setCode(ResponseStatusEnum.Do_FAIELD.getStatus());
+            res.setMsg("url已存在！");
+        }else {
+            res.setCode(ResponseStatusEnum.Do_SUCCESSFUL.getStatus());
+            res.setMsg("url可用！");
+        }
+
+        return JSONObject.toJSON(res).toString();
+    }
 }
