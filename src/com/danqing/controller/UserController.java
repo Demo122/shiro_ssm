@@ -74,7 +74,10 @@ public class UserController {
 //        System.out.println(id);
         ResponseJSON res=new ResponseJSON();
         try {
+            //1.删除用户
             userService.delete(id);
+            //2.删除与该用户关联的角色
+            userRoleService.deleteByUser(id);
             //设置返回状态码，1成功，2失败，-1没有权限，在shiro的过滤器里已经设置返回了
             res.setCode(ResponseStatusEnum.Do_SUCCESSFUL.getStatus());
             res.setMsg("删除成功");
