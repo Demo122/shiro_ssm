@@ -18,9 +18,10 @@
         <div class="layui-form-item">
             <label class="layui-form-label">用户名</label>
             <div class="layui-input-inline">
-                <input type="text" name="name" required lay-verify="username" placeholder="用户名" autocomplete="off"
+                <input type="text" name="name" id="username" required lay-verify="username" placeholder="用户名" autocomplete="off"
                        class="layui-input">
             </div>
+            <div class="layui-form-mid " id="ussername_status"></div>
         </div>
 
         <div class="layui-form-item">
@@ -46,6 +47,7 @@
     //Demo
     layui.use('form', function () {
         var form = layui.form;
+        var ussername_status=0;  //用户名是否可以用
 
         //自定义验证规则
         form.verify({
@@ -74,32 +76,69 @@
         //监听提交
         form.on('submit(formDemo)', function (data) {
             // layer.msg(JSON.stringify(data.field));
-            $.ajax({
-                type: "POST",
-                url: "/user/addUser",
-                data: JSON.stringify(data.field),
-                dataType: "json",
-                contentType: "application/json;charset=UTF-8",
-                success: function (result) {
-                    console.log(result.msg);
-                    layer.msg(result.msg, {
-                            time: 300 //0.5秒关闭（如果不配置，默认是3秒）
-                        },
-                        function () {
-                            //do something
-                            //当你在iframe页面关闭自身时
-                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            parent.layer.close(index); //再执行关闭
-                        });
-                },
-                error: function (result) {
-                    layer.alert("添加用户失败");
-                }
-            });
+            //用户可用才能提交添加
+            if(ussername_status==1){
+                $.ajax({
+                    type: "POST",
+                    url: "/user/addUser",
+                    data: JSON.stringify(data.field),
+                    dataType: "json",
+                    contentType: "application/json;charset=UTF-8",
+                    success: function (result) {
+                        console.log(result.msg);
+                        layer.msg(result.msg, {
+                                time: 300 //0.5秒关闭（如果不配置，默认是3秒）
+                            },
+                            function () {
+                                //do something
+                                //当你在iframe页面关闭自身时
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index); //再执行关闭
+                            });
+                    },
+                    error: function (result) {
+                        layer.alert("添加用户失败");
+                    }
+                });
+            }
+            if (ussername_status==2){
+                layer.alert("用户名已存在,请换一个！");
+            }
+
 
             return false;
         });
+
+
+        //监听键盘弹起事件，查询用户名是否重复
+        $(function () {
+            $("#username").change(function () {
+                var name=$('#username').val();
+                var data={"username":name};
+                $.ajax({
+                    type: "POST",
+                    url:"/user/checkUsername/",
+                    data:data,
+                    success:function (result) {
+                        if (result.code==1){
+                            ussername_status=result.code;
+                            layer.msg(result.msg);
+                            $("#ussername_status").css({"color":"green"});
+                            $('#ussername_status').html(result.msg);
+                        }
+                        if (result.code==2){
+                            ussername_status=result.code;
+                            layer.msg(result.msg);
+                            $("#ussername_status").css({"color":"red"});
+                            $('#ussername_status').html(result.msg);
+                        }
+                    }
+                });
+            });
+        });
+
     });
+
 </script>
 </body>
 </html>
