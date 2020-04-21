@@ -118,6 +118,9 @@
       <if test="menu != null">
         menu = #{menu,jdbcType=BIT},
       </if>
+      <if test="category != null">
+        category = #{category,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
