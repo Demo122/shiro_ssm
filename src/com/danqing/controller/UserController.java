@@ -304,4 +304,27 @@ public class UserController {
         model.addAttribute("userRoles", userRoles);
         return "editUser";
     }
+
+    /**
+     *  检查用户名是否重复，重复不能提交
+     * @param username
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "checkUsername",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    public String checkUsername(String username){
+        System.out.println(username);
+        ResponseJSON res=new ResponseJSON();
+        User u=userService.getByName(username);
+        if (u!=null){
+            //不空，说明有这个用户名的用户
+            res.setCode(ResponseStatusEnum.Do_FAIELD.getStatus());
+            res.setMsg("用户名已存在！");
+        }else {
+            res.setCode(ResponseStatusEnum.Do_SUCCESSFUL.getStatus());
+            res.setMsg("用户名可用！");
+        }
+
+        return JSONObject.toJSON(res).toString();
+    }
 }
