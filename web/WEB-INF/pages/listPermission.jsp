@@ -32,7 +32,7 @@
 
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="deleteAllUser">全部删除</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="deleteSelectPermission">全部删除</button>
     </div>
 </script>
 
@@ -105,7 +105,8 @@
                         contentType: "application/json;charset=UTF-8",
                         success: function (result) {
                             layer.msg(result.msg);
-                            obj.del();
+                            //重载表格
+                            table.reload('permissionTable');
                         },
                         error: function (result) {
                             layer.alert(result.msg);
@@ -114,31 +115,50 @@
                     layer.close(index);
                 });
             } else if (obj.event === 'edit') {
-                layer.alert('编辑行：<br>' + JSON.stringify(data))
+                //编辑
+                layer.open({
+                    type: 2,
+                    fix: false, //不固定
+                    area: ['700px', '500px'],
+                    maxmin: true,
+                    shadeClose: true,
+                    shade: 0.4,
+                    title: '编辑权限信息',
+                    content: '/permission/editPermissionPage/' + data.id,
+                    //end - 层销毁后触发的回调
+                    end: function () {
+                        //重载表格
+                        table.reload('permissionTable');
+                    }
+                });
             }
         });
 
         //工具栏事件
         table.on('toolbar(demo)', function (obj) {
             var checkStatus = table.checkStatus(obj.config.id);
+            var data = checkStatus.data;
+            var ids = new Array();
+            //获取选中行的id
+            for (var i = 0; i < data.length; i++) {
+                ids.push(data[i].id);
+            }
             switch (obj.event) {
-                case 'getCheckLength':
-                    var data = checkStatus.data;
-                    layer.msg('选中了：' + data.length + ' 个');
-                    break;
-                case 'deleteAllUser':
-                    var data = checkStatus.data;
+                case 'deleteSelectPermission':
+                    var jsonDate={"ids":ids};
                     $.ajax({
                         type: "DELETE",
-                        url: "/config/deleteSelectUser",
-                        data: JSON.stringify(data),
+                        url: "/permission/deleteSelectPermission",
+                        data: JSON.stringify(jsonDate),
                         dataType: "json",
                         contentType: "application/json;charset=UTF-8",
                         success: function (result) {
-                            if (result.code) {
+                            if (result.code==1) {
                                 layer.alert("删除成功");
-
-                            } else {
+                                //重载表格
+                                table.reload('permissionTable');
+                            }
+                            if(result.code==2){
                                 layer.alert("删除失败");
                             }
                         },
@@ -146,11 +166,7 @@
                             layer.alert("删除失败");
                         }
                     });
-                    //重载表格
-                    table.reload('userTable');
-                    break;
-            }
-            ;
+            };
         });
 
         $(function () {
