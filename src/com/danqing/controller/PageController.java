@@ -56,7 +56,12 @@ public class PageController {
         return "listUser";
     }
 
-    @RequestMapping("/listPermission")
+    @RequestMapping("listRole")
+    public String listRole() {
+        return "listRole";
+    }
+
+    @RequestMapping("listPermission")
     public String listPermission() {
         return "listPermission";
     }
