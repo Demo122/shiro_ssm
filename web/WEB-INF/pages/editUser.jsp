@@ -133,13 +133,13 @@
                 arr_box.push($(this).val());
             });
             //创建roleIds类的json数据对象，
-            var roleIdsJSON={"roleIds":arr_box};
+            var roleIdsJSON={"ids":arr_box};
             //user类的json数据对象 data.field
             //创建json数据对象
             var jsonData={"user":data.field,"roleIds":roleIdsJSON};
             // layer.msg(JSON.stringify(data.field));
             $.ajax({
-                type: "post",
+                type: "POST",
                 url: "/user/updateUser",
                 data: JSON.stringify(jsonData),
                 dataType: "json",
