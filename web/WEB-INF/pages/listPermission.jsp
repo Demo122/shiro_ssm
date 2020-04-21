@@ -43,9 +43,9 @@
 </script>
 <script type="text/html" id="menu">
     {{#  if(!d.menu){ }}
-    <span style="color: #F581B1;">{{ d.menu }}</span>
+    <span style="color: #F581B1;">否</span>
     {{#  } else { }}
-    {{ d.menu }}
+        是
     {{#  } }}
 </script>
 
