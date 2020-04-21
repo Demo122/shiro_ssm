@@ -22,4 +22,6 @@ public interface PermissionMapper {
     int updateByPrimaryKey(Permission record);
 
     int getTotal();
+
+    Permission getByUrl(String url);
 }

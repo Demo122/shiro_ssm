@@ -19,6 +19,8 @@ public interface PermissionService {
 
     public Permission get(String permissionName);
 
+    public Permission getByUrl(String url);
+
     public void update(Permission permission);
 
     public List<Permission> list(Role role);

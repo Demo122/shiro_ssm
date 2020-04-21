@@ -131,4 +131,9 @@ public class PermissionServiceImpl implements PermissionService {
     public int getTotal() {
         return permissionMapper.getTotal();
     }
+
+    @Override
+    public Permission getByUrl(String url) {
+        return permissionMapper.getByUrl(url);
+    }
 }

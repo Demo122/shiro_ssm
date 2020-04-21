@@ -139,6 +139,12 @@
     select
     <include refid="Base_Column_List" />
     from permission
-    where name = #{name,jdbcType=BIGINT}
+    where name = #{name,jdbcType=VARCHAR}
+  </select>
+  <select id="getByUrl" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from permission
+    where url = #{url,jdbcType=VARCHAR}
   </select>
 </mapper>
