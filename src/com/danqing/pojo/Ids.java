@@ -7,20 +7,20 @@ import java.util.Arrays;
  * Created by danqing on 2020/4/19 1:10
  */
 public class Ids {
-    private long[] Ids;
+    private long[] ids;
 
     public long[] getIds() {
-        return Ids;
+        return ids;
     }
 
     public void setIds(long[] ids) {
-        Ids = ids;
+        this.ids = ids;
     }
 
     @Override
     public String toString() {
         return "Ids{" +
-                "Ids=" + Arrays.toString(Ids) +
+                "ids=" + Arrays.toString(ids) +
                 '}';
     }
 }
