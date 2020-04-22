@@ -136,7 +136,7 @@ public class UserController {
         //2.获取传来的 需要更改的的角色ID
         long[] roleIds=userExt.getRoleIds().getIds();
 //
-        System.out.println(user.toString()+"--"+roleIds.toString());
+//        System.out.println(user.toString()+"--"+roleIds.toString());
 
         //3.根据userId获取该用户在数据库中的信息
         User userInDB =userService.get(user.getId());
@@ -243,6 +243,41 @@ public class UserController {
     }
 
 
+    @ResponseBody
+    @RequestMapping(value = "searchUser",method = RequestMethod.POST)
+    public String searchUser(@RequestBody searchBean searchBean){
+
+        ResponseJSON res=new ResponseJSON();
+        List<User> data=new ArrayList<>();
+        User u=null;
+
+        if (null!=searchBean.getSearchContent()){
+            //根据名字查找
+            u=userService.getByName(searchBean.getSearchContent());
+        }else if(null!=searchBean.getSearchId()){
+            //根据id
+            long id=Long.valueOf(searchBean.getSearchId());
+            u=userService.get(id);
+        }
+
+        //查找到的user不为空
+        if (null!=u){
+            data.add(u);
+            res.setData(data);
+            //为什么设为0呢，应为layui的table异步请求成功的code要求是0.。。。。。。，否则就是请求失败 有点子坑呀
+            res.setCode(0);
+            res.setDataCount(1);
+            res.setMsg("search successfuly!");
+        }else {
+            res.setDataCount(0);
+            res.setCode(ResponseStatusEnum.Do_FAIELD.getStatus());
+            res.setMsg("search failed! no user match！");
+            res.setData(null);
+        }
+
+        return JSONObject.toJSON(res).toString();
+    }
+
     /**
      * @desceiption 更新选中的单个用户状态
      *
@@ -317,7 +352,7 @@ public class UserController {
      * @param user
      * @return
      */
-    @RequestMapping("editUserPage/{id}")
+    @RequestMapping("editUserPage")
     public String editUserPage(Model model, User user) {
         User u = userService.get(user.getId());
         List<Role> roles = roleService.list();
