@@ -80,7 +80,7 @@ public class PermissionController {
     @RequestMapping("listPermission")
     public String list(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "nums", defaultValue = "10") int nums) {
 
-        System.out.println(page+"--"+nums);
+//        System.out.println(page+"--"+nums);
 
         //使用pageHelper分页
         PageHelper.startPage(page, nums);
@@ -198,7 +198,7 @@ public class PermissionController {
      * @param permission
      * @return
      */
-    @RequestMapping("editPermissionPage/{id}")
+    @RequestMapping("editPermissionPage")
     public String editPermissionPage(Model model, Permission permission) {
         Permission p = permissionService.get(permission.getId());
 
