@@ -13,6 +13,14 @@ public interface PermissionMapper {
 
     List<Permission> selectByExample(PermissionExample example);
 
+    List<Permission> selectByCategory(String category);
+
+    int getTotalSelectByCategory(String category);
+
+    List<Permission> selectByMenu(Boolean menu);
+
+    int getTotalSelectByMenu(String menu);
+
     Permission selectByPrimaryKey(Long id);
 
     Permission selectByName(String name);

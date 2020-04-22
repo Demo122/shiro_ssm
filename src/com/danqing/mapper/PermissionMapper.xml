@@ -141,6 +141,28 @@
     from permission
     where name = #{name,jdbcType=VARCHAR}
   </select>
+  <select id="selectByCategory" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from permission
+    where category = #{category,jdbcType=VARCHAR}
+  </select>
+  <select id="getTotalSelectByCategory" parameterType="java.lang.String" resultType="int">
+    select count(*)
+    from permission
+    where category = #{category,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByMenu" parameterType="java.lang.Boolean" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from permission
+    where menu = #{menu,jdbcType=BIT}
+  </select>
+  <select id="getTotalSelectByMenu" parameterType="java.lang.Boolean" resultType="int">
+    select count(*)
+    from permission
+    where menu = #{menu,jdbcType=BIT}
+  </select>
   <select id="getByUrl" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
