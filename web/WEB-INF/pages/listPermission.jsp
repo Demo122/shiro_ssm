@@ -22,7 +22,29 @@
 
 <div class="layui-container layui-col-md10" style="margin-top: 20px;">
     <div class="layui-row">
+        <form class="layui-form" >
+            <div class="layer-row">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">查找方式</label>
+                    <div class="layui-input-inline">
+                        <select id="searchItem" >
+                            <option value="searchAll">查询全部</option>
+                            <option value="name">权限名称</option>
+                            <option value="category">类别</option>
+                            <option value="menu">是否菜单(填true/false)</option>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline">
+                        <input type="text"  id="searchContent"  lay-verify="required" placeholder="查找条件" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-input-inline">
+                        <input type="button" value="查找" class="layui-btn" id="search"/>
+                    </div>
+                </div>
+            </div>
 
+        </form>
     </div>
     <div class="layui-row">
         <table class="layui-hide" id="permissionTable" lay-filter="demo"></table>
@@ -58,6 +80,7 @@
 
     layui.use('table', function () {
         var table = layui.table;
+
 
 
         //第一个实例
@@ -188,6 +211,53 @@
                     });
             };
         });
+
+        //监听查找
+        $(function () {
+            $("#search").click(function () {
+                var searchItem=$("#searchItem").val();
+                var searchContent=$("#searchContent").val();
+                var jsonDate={"searchItem":searchItem,"searchContent":searchContent};
+
+                // console.log(searchItem);
+                if (searchItem=="searchAll"){
+                    $("#searchContent").val("");
+                    table.reload('permissionTable',{
+                        url: '/permission/listPermission'
+                        //从第一页开始
+                        ,page:{curr:1}
+                        ,parseData: function (res) { //res 即为原始返回的数据
+                            return {
+                                "code": res.code,
+                                "msg": res.msg,
+                                "count": res.count,
+                                "data": res.data //解析数据列表
+                            };
+                        }
+                    });
+                } else {
+                    table.reload('permissionTable', {
+                        url: '/permission/searchRole'
+                        ,where:jsonDate //设定异步数据接口的额外参数
+                        ,method:'POST'
+                        ,contentType: 'application/json;charset=UTF-8'
+                        ,parseData: function (res) { //res 即为原始返回的数据
+                            return {
+                                "code": res.code,
+                                "msg": res.msg,
+                                "count": res.dataCount,
+                                "data": res.data //解析数据列表
+                            };
+                        }
+                        , text: {
+                            none: '暂无相关数据'
+                        }
+                    });
+                }
+
+            });
+        });
+
 
 
     });
