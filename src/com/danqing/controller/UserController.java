@@ -28,6 +28,12 @@ public class UserController {
     @Autowired
     RoleService roleService;
 
+    /**
+     * 获取用户列表
+     * @param page
+     * @param nums
+     * @return
+     */
     @ResponseBody
     @RequestMapping("listUser")
     public String list(@RequestParam(value = "page",defaultValue = "1") int page,@RequestParam(value = "nums",defaultValue = "10") int nums) {
@@ -55,19 +61,12 @@ public class UserController {
         return JSONObject.toJSON(res).toString();
     }
 
-    @RequestMapping("editUser")
-    public String edit(Model model, long id) {
-        List<Role> rs = roleService.list();
-        model.addAttribute("rs", rs);
-        User user = userService.get(id);
-        model.addAttribute("user", user);
 
-        List<Role> roles = roleService.listRoles(user);
-        model.addAttribute("currentRoles", roles);
-
-        return "editUser";
-    }
-
+    /**
+     * 删除用户
+     * @param id
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "deleteUser", method = RequestMethod.DELETE)
     public String delete(@RequestBody long id) {
@@ -101,7 +100,10 @@ public class UserController {
         try {
             //删除选中用户
             for (Long id : ids) {
+                //1.删除用户
                 userService.delete(id);
+                //2.删除与该用户关联的角色
+                userRoleService.deleteByUser(id);
             }
             res.setCode(ResponseStatusEnum.Do_SUCCESSFUL.getStatus());
             res.setMsg("删除成功");
@@ -175,11 +177,20 @@ public class UserController {
         return JSONObject.toJSON(res).toString();
     }
 
+    /**
+     * 请求添加用户页面
+     * @return
+     */
     @RequestMapping("addUserPage")
     public String addUserPage() {
         return "addUser";
     }
 
+    /**
+     * 添加用户
+     * @param user
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "addUser", method = RequestMethod.POST)
     public String add(@RequestBody User user) {
@@ -208,6 +219,11 @@ public class UserController {
         return JSONObject.toJSON(res).toString();
     }
 
+    /**
+     * 查看用户角色
+     * @param id
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "getUserRoles/{id}",method = RequestMethod.GET)
     public String getUserRoles(@PathVariable long id){
