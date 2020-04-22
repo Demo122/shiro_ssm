@@ -81,7 +81,7 @@
     //Demo
     layui.use('form', function () {
         var form = layui.form;
-        var ussername_status=0;  //用户名是否可以用
+        var ussername_status=1;  //用户名是否可以用
 
 
         //自定义的验证
@@ -149,6 +149,9 @@
                     dataType: "json",
                     contentType: "application/json;charset=UTF-8",
                     success: function (result) {
+                        if (result.code==-1){
+                            layer.alert(result.msg);
+                        }
                         if(result.code==1){
                             layer.msg(result.msg, {
                                     time: 300 //0.5秒关闭（如果不配置，默认是3秒）

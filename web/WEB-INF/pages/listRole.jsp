@@ -115,7 +115,7 @@
                     shadeClose: true,
                     shade: 0.4,
                     title: '编辑角色信息',
-                    content: '/role/editRolePage/' + data.id,
+                    content: '/role/editRolePage?id=' + data.id,
                     //end - 层销毁后触发的回调
                     end: function () {
                         //重载表格
@@ -132,7 +132,7 @@
                     shadeClose: true,
                     shade: 0.4,
                     title: '角色的权限授予',
-                    content: '/role/editRolePermissionPage/'+data.id,
+                    content: '/role/editRolePermissionPage?id='+data.id,
                     //end - 层销毁后触发的回调
                     end: function () {
                         //重载表格

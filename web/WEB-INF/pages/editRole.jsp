@@ -48,7 +48,7 @@
     //Demo
     layui.use('form', function () {
         var form = layui.form;
-        var roleName_status=0;
+        var roleName_status=1;
 
         //监听提交
         form.on('submit(formDemo)', function (data) {

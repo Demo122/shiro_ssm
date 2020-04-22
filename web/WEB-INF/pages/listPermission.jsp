@@ -43,7 +43,6 @@
                     </div>
                 </div>
             </div>
-
         </form>
     </div>
     <div class="layui-row">
@@ -151,7 +150,7 @@
                     shadeClose: true,
                     shade: 0.4,
                     title: '编辑权限信息',
-                    content: '/permission/editPermissionPage/' + data.id,
+                    content: '/permission/editPermissionPage?id=' + data.id,
                     //end - 层销毁后触发的回调
                     end: function () {
                         //重载表格

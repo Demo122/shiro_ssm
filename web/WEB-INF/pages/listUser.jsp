@@ -22,7 +22,20 @@
 
 <div class="layui-container layui-col-md10" style="margin-top: 20px;">
     <div class="layui-row">
-        <button type="button" class="layui-btn layui-btn-normal" id="addUserPage"><i class="layui-icon"></i>添加用户</button>
+        <form class="layui-form" >
+            <div class="layer-row">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">查找用户</label>
+                    <div class="layui-input-inline">
+                        <input type="text"  id="searchContent"  lay-verify="required" placeholder="用户名" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-input-inline">
+                        <input type="button" value="查找" class="layui-btn" id="search"/>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
     <div class="layui-row">
         <table class="layui-hide" id="userTable" lay-filter="demo"></table>
@@ -30,6 +43,8 @@
 </div>
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addUserPage">
+            <i class="layui-icon"></i>添加用户</button>
         <button class="layui-btn layui-btn-sm " lay-event="openUser">开启选中</button>
         <button class="layui-btn layui-btn-sm layui-btn layui-btn-warm" lay-event="forbidUser">禁用选中</button>
         <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="deleteAllUser">删除选中</button>
@@ -37,7 +52,7 @@
 </script>
 
 <script type="text/html" id="switchTpl">
-    <!-- 这里的 checked 的状态只是演示 -->
+
     <input type="checkbox" name="status" user_id="{{d.id}}" id="checkstatus" lay-skin="switch" lay-text="开启|禁用" lay-filter="status" {{
            d.status== true ? 'checked' : '' }}>
 </script>
@@ -56,6 +71,8 @@
 
     layui.use('table', function () {
         var table = layui.table, form = layui.form;
+
+        var isSearchUser=false;
 
 
         //第一个实例
@@ -141,11 +158,23 @@
                     shadeClose: true,
                     shade: 0.4,
                     title: '编辑用户信息',
-                    content: '/user/editUserPage/' + data.id,
+                    content: '/user/editUserPage?id=' + data.id,
                     //end - 层销毁后触发的回调
                     end: function () {
-                        //重载表格
-                        table.reload('userTable');
+                        if (isSearchUser){
+                            //重载表格
+                            var jsonDate={"searchId":obj.data.id};
+                            table.reload('userTable', {
+                                url: '/user/searchUser'
+                                ,where:jsonDate //设定异步数据接口的额外参数
+                                ,done:function (res,curr,count) {
+                                    this.where=""
+                                }
+                            });
+                        }else{
+                            table.reload('userTable');
+                        }
+
                     }
                 });
             }
@@ -161,6 +190,24 @@
                 ids.push(data[i].id);
             }
             switch (obj.event) {
+                case 'addUserPage':
+                    layer.open({
+                        type: 2,
+                        fix: false, //不固定
+                        area: ['500px', '300px'],
+                        maxmin: true,
+                        shadeClose: true,
+                        shade: 0.4,
+                        title: '添加用户',
+                        // content: '../../static/pages/addUser.jsp'
+                        content: '/user/addUserPage',
+                        //end - 层销毁后触发的回调
+                        end: function () {
+                            //重载表格
+                            table.reload('userTable');
+                        }
+                    });
+                    break;
                 case 'openUser':
                     //设置status的值控制开启或者禁用
                     var jsonDate={"ids":ids,"status":"true"};
@@ -283,27 +330,37 @@
 
         });
 
+        //监听查找
         $(function () {
-            $("#addUserPage").click(function () {
-                layer.open({
-                    type: 2,
-                    fix: false, //不固定
-                    area: ['500px', '300px'],
-                    maxmin: true,
-                    shadeClose: true,
-                    shade: 0.4,
-                    title: '添加用户',
-                    // content: '../../static/pages/addUser.jsp'
-                    content: '/user/addUserPage',
-                    //end - 层销毁后触发的回调
-                    end: function () {
-                        //重载表格
-                        table.reload('userTable');
+            $("#search").click(function () {
+                var searchContent=$("#searchContent").val();
+                var jsonDate={"searchContent":searchContent};
+                isSearchUser=true;
+                table.reload('userTable', {
+                    url: '/user/searchUser'
+                    ,where:jsonDate //设定异步数据接口的额外参数
+                    ,method:'POST'
+                    ,contentType: 'application/json;charset=UTF-8'
+                    ,page: false
+                    ,parseData: function (res) { //res 即为原始返回的数据
+                        return {
+                            "code": res.code,
+                            "msg": res.msg,
+                            "count": res.dataCount,
+                            "data": res.data //解析数据列表
+                        };
+                    }
+                    , text: {
+                        none: '暂无相关数据'
+                    }
+                    ,done:function (res,curr,count) {
+                        this.where=""
                     }
                 });
-            });
 
+            });
         });
+
 
     });
 
