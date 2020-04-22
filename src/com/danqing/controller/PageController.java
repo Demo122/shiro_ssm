@@ -51,6 +51,7 @@ public class PageController {
         return "index";
     }
 
+    // 加入权限维护listUser，listRole，listPermission
     @RequestMapping("listUser")
     public String listUser() {
         return "listUser";
@@ -66,22 +67,7 @@ public class PageController {
         return "listPermission";
     }
 
-    // @RequiresPermissions("deleteOrder")
-    @RequestMapping("deleteOrder")
-    public String deleteOrder() {
-        return "deleteOrder";
-    }
 
-    // @RequiresRoles("productManager")
-    @RequestMapping("deleteProduct")
-    public String deleteProduct() {
-        return "deleteProduct";
-    }
-
-    @RequestMapping("listProduct")
-    public String listProduct() {
-        return "listProduct";
-    }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login() {
