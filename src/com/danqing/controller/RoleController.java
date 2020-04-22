@@ -102,8 +102,8 @@ public class RoleController {
      * @param role
      * @return
      */
-    @RequestMapping("editRolePage/{id}")
-    public String editPermissionPage(Model model,Role role) {
+    @RequestMapping("editRolePage")
+    public String editRolePage(Model model,Role role) {
         Role r = roleService.get(role.getId());
 
         model.addAttribute("role",r);
@@ -214,7 +214,7 @@ public class RoleController {
     }
 
 
-    @RequestMapping("editRolePermissionPage/{id}")
+    @RequestMapping("editRolePermissionPage")
     public String editRolePermissionPage(Model model,Role role){
         Role r = roleService.get(role.getId());
 
