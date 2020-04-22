@@ -247,30 +247,6 @@ public class RoleController {
     }
 
 
-    @RequestMapping("editRole")
-    public String list(Model model, long id) {
-        Role role = roleService.get(id);
-
-        model.addAttribute("role", role);
-
-        List<Permission> ps = permissionService.list();
-
-        model.addAttribute("ps", ps);
-
-        List<Permission> currentPermissions = permissionService.list(role);
-
-        model.addAttribute("currentPermissions", currentPermissions);
-
-        return "editRole";
-    }
-
-
-    @RequestMapping("updateRolesad")
-    public String update(Role role, long[] permissionIds) {
-        rolePermissionService.setPermissions(role, permissionIds);
-        roleService.update(role);
-        return "redirect:listRole";
-    }
 
 
 
