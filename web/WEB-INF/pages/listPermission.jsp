@@ -35,7 +35,7 @@
                         </select>
                     </div>
                     <div class="layui-input-inline">
-                        <input type="text"  id="searchContent"  lay-verify="required" placeholder="查找条件" autocomplete="off"
+                        <input type="text"  id="searchContent"  lay-verify="required" placeholder="查找内容" autocomplete="off"
                                class="layui-input">
                     </div>
                     <div class="layui-input-inline">
@@ -131,7 +131,9 @@
                         success: function (result) {
                             layer.msg(result.msg);
                             //重载表格
-                            table.reload('permissionTable');
+                            table.reload('permissionTable',{
+                                page:{curr:1}
+                            });
                         },
                         error: function (result) {
                             layer.alert(result.msg);
@@ -205,7 +207,7 @@
                         content: '/permission/addPermissionPage',
                         //end - 层销毁后触发的回调
                         end: function () {
-                            //重载表格
+                            //重载表格 其实就是重载当前局部数据，即上一次加载的数据
                             table.reload('permissionTable');
                         }
                     });
@@ -224,8 +226,9 @@
                     $("#searchContent").val("");
                     table.reload('permissionTable',{
                         url: '/permission/listPermission'
-                        //从第一页开始
-                        ,page:{curr:1}
+                        ,method: "GET"
+                        ,contentType:""
+                        ,where:""
                         ,parseData: function (res) { //res 即为原始返回的数据
                             return {
                                 "code": res.code,
@@ -241,6 +244,8 @@
                         ,where:jsonDate //设定异步数据接口的额外参数
                         ,method:'POST'
                         ,contentType: 'application/json;charset=UTF-8'
+                        //从第一页开始
+                        ,page:{curr:1}
                         ,parseData: function (res) { //res 即为原始返回的数据
                             return {
                                 "code": res.code,
