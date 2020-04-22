@@ -45,6 +45,30 @@ public class RolePermissionServiceImpl implements RolePermissionService {
     }
 
     @Override
+    public void addPermission(Role role, long[] permissionIds) {
+        // 设置新的权限关系
+        if (null != permissionIds)
+            for (long pid : permissionIds) {
+                RolePermission rolePermission = new RolePermission();
+                rolePermission.setPid(pid);
+                rolePermission.setRid(role.getId());
+                rolePermissionMapper.insert(rolePermission);
+            }
+    }
+
+    @Override
+    public void deletePermission(Role role, long[] permissionIds) {
+        if(null!=permissionIds){
+            for (long pid : permissionIds) {
+                RolePermission rolePermission = new RolePermission();
+                rolePermission.setPid(pid);
+                rolePermission.setRid(role.getId());
+                rolePermissionMapper.deleteByRoleIdAndPermissionId(rolePermission);
+            }
+        }
+    }
+
+    @Override
     public void deleteByRole(long roleId) {
         RolePermissionExample example = new RolePermissionExample();
         example.createCriteria().andRidEqualTo(roleId);

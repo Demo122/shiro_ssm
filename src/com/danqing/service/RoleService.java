@@ -1,10 +1,10 @@
 package com.danqing.service;
 
-import java.util.List;
-import java.util.Set;
-
 import com.danqing.pojo.Role;
 import com.danqing.pojo.User;
+
+import java.util.List;
+import java.util.Set;
 
 public interface RoleService {
     public Set<String> listRoleNames(String userName);
@@ -22,5 +22,9 @@ public interface RoleService {
     public Role get(Long id);
 
     public void update(Role role);
+
+    public int getTotal();
+
+    public Role getByName(String name);
 
 }

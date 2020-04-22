@@ -1,22 +1,17 @@
 package com.danqing.service.impl;
 
+import com.danqing.mapper.RoleMapper;
+import com.danqing.mapper.UserRoleMapper;
+import com.danqing.pojo.*;
+import com.danqing.service.RoleService;
+import com.danqing.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.danqing.mapper.RoleMapper;
-import com.danqing.mapper.UserRoleMapper;
-import com.danqing.pojo.Role;
-import com.danqing.pojo.RoleExample;
-import com.danqing.pojo.User;
-import com.danqing.pojo.UserRole;
-import com.danqing.pojo.UserRoleExample;
-import com.danqing.service.RoleService;
-import com.danqing.service.UserService;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -77,6 +72,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public int getTotal() {
+        return roleMapper.getTotal();
+    }
+
+    @Override
     public List<Role> listRoles(User user) {
         List<Role> roles = new ArrayList<>();
 
@@ -92,4 +92,8 @@ public class RoleServiceImpl implements RoleService {
         return roles;
     }
 
+    @Override
+    public Role getByName(String name) {
+        return roleMapper.getByName(name);
+    }
 }

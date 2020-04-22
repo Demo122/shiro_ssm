@@ -11,4 +11,8 @@ public interface RolePermissionService {
     public void deleteByPermission(long permissionId);
 
     public void addPermission(RolePermission rolePermission);
+
+    public void addPermission(Role role,long[] permissionIds);
+
+    public void deletePermission(Role role,long[] permissionIds);
 }

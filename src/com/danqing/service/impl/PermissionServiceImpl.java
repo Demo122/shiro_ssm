@@ -83,6 +83,26 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
+    public List<Permission> selectByCategory(String category) {
+        return permissionMapper.selectByCategory(category);
+    }
+
+    @Override
+    public List<Permission> selectByMenu(Boolean menu) {
+        return permissionMapper.selectByMenu(menu);
+    }
+
+    @Override
+    public int getTotalSelectByCategory(String category) {
+        return permissionMapper.getTotalSelectByCategory(category);
+    }
+
+    @Override
+    public int getTotalSelectByMenu(String menu) {
+        return permissionMapper.getTotalSelectByMenu(menu);
+    }
+
+    @Override
     public List<Permission> list(Role role) {
         List<Permission> result = new ArrayList<>();
         RolePermissionExample example = new RolePermissionExample();

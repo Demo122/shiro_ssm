@@ -25,6 +25,14 @@ public interface PermissionService {
 
     public List<Permission> list(Role role);
 
+    public List<Permission> selectByCategory(String category);
+
+    public int getTotalSelectByCategory(String category);
+
+    public List<Permission> selectByMenu(Boolean menu);
+
+    public int getTotalSelectByMenu(String menu);
+
     public boolean needInterceptor(String requestURI);
 
     public Set<String> listPermissionURLs(String userName);
