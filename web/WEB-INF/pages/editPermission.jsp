@@ -30,7 +30,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">url</label>
             <div class="layui-input-inline">
-                <input type="text" name="url" id="url" value="${permission.url}" required  placeholder="请输入url" autocomplete="off" class="layui-input">
+                <input type="text" name="url" id="url" value="${permission.url}" lay-verify="'required|permission_url"  placeholder="请输入url" autocomplete="off" class="layui-input">
             </div>
             <div class="layui-form-mid " id="url_status"></div>
         </div>
@@ -79,10 +79,17 @@
     //Demo
     layui.use('form', function () {
         var form = layui.form;
-        var permissionName_status=0;
-        var url_status=0;
+        var permissionName_status=1;
+        var url_status=1;
 
 
+        form.verify({
+            permission_url: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (/[\u4e00-\u9fa5]/.test(value)) {
+                    return 'url中不能包含中文';
+                }
+            }
+        });
         //监听提交
         form.on('submit(formDemo)', function (data) {
 
