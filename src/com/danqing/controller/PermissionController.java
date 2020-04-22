@@ -10,9 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("permission")
@@ -23,11 +21,71 @@ public class PermissionController {
     @Autowired
     RolePermissionService rolePermissionService;
 
+    /**
+     * searchBean 包含查找项，和查找内容 即searchItem 按说明查找，searchcontent 查找条件
+     * @param searchBean
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "searchRole",method = RequestMethod.POST)
+    public String searchRole(@RequestBody searchBean searchBean){
+
+        ResponseJSON res=new ResponseJSON();
+        List<Permission> data=new ArrayList<>();
+
+        //使用pageHelper分页
+        PageHelper.startPage(searchBean.getPage(), searchBean.getNums());
+
+        //获取查找到的总数
+        int count=0;
+
+        if ("name".equals(searchBean.getSearchItem())){
+            //根据名字查找
+            Permission p=permissionService.get(searchBean.getSearchContent());
+            if (null!=p){
+                data.add(p);
+                count=data.size();
+            }else {
+                count=0;
+            }
+        }
+        if ("category".equals(searchBean.getSearchItem())){
+            //按类别查找
+            data=permissionService.selectByCategory(searchBean.getSearchContent());
+            count=permissionService.getTotalSelectByCategory(searchBean.getSearchContent());
+        }
+        if("menu".equals(searchBean.getSearchItem())){
+            //查找所有菜单
+            String menu1=searchBean.getSearchContent();
+            Boolean menu=null;
+            if("true".equals(menu1)||"false".equals(menu1)){
+                //将string装boolean值
+                menu=Boolean.valueOf(searchBean.getSearchContent());
+            }
+            data=permissionService.selectByMenu(menu);
+            count=permissionService.getTotalSelectByMenu(searchBean.getSearchContent());
+        }
+
+        for (Permission datum : data) {
+            System.out.println(datum);
+        }
+
+
+        //为什么设为0呢，应为layui的table异步请求成功的code要求是0.。。。。。。，否则就是请求失败 有点子坑呀
+        res.setCode(0);
+        res.setMsg("search successfuly!");
+        res.setDataCount(count);
+        res.setData(data);
+
+        return JSONObject.toJSON(res).toString();
+    }
+
     @ResponseBody
     @RequestMapping("listPermission")
     public String list(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "nums", defaultValue = "10") int nums) {
         //使用pageHelper分页
         PageHelper.startPage(page, nums);
+        //再查找
         List<Permission> ps = permissionService.list();
         //获取用户总数
         int count = permissionService.getTotal();
