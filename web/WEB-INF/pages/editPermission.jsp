@@ -23,15 +23,16 @@
         <div class="layui-form-item">
             <label class="layui-form-label">权限名称</label>
             <div class="layui-input-inline">
-                <input type="text" name="name" value="${permission.name}" required   placeholder="请输入权限名称" autocomplete="off" class="layui-input">
+                <input type="text" name="name" id="permissionName" value="${permission.name}" required   placeholder="请输入权限名称" autocomplete="off" class="layui-input">
             </div>
+            <div class="layui-form-mid " id="permissionName_status"></div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">url</label>
             <div class="layui-input-inline">
-                <input type="text" name="url" value="${permission.url}" required  placeholder="请输入url" autocomplete="off" class="layui-input">
+                <input type="text" name="url" id="url" value="${permission.url}" required  placeholder="请输入url" autocomplete="off" class="layui-input">
             </div>
-            <div class="layui-form-mid layui-word-aux"></div>
+            <div class="layui-form-mid " id="url_status"></div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">类别</label>
@@ -67,7 +68,7 @@
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button type="reset" class="layui-btn layui-btn-primary" id="rest">重置</button>
             </div>
         </div>
     </form>
@@ -78,9 +79,8 @@
     //Demo
     layui.use('form', function () {
         var form = layui.form;
-
-
-
+        var permissionName_status=0;
+        var url_status=0;
 
 
         //监听提交
@@ -88,30 +88,101 @@
 
             // layer.msg(JSON.stringify(data.field));
 
-            $.ajax({
-                type: "post",
-                url: "/permission/updatePermission",
-                data: JSON.stringify(data.field),
-                dataType: "json",
-                contentType: "application/json;charset=UTF-8",
-                success: function (result) {
-                    layer.msg(result.msg, {
-                            time: 500 //0.5秒关闭（如果不配置，默认是3秒）
-                        },
-                        function(){
-                            //do something
-                            //当你在iframe页面关闭自身时
-                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            parent.layer.close(index); //再执行关闭
-                        });
-                },
-                error:function (result) {
-                    layer.alert("更新权限失败");
-                }
-            });
+            if(permissionName_status==1&&url_status==1){
+                $.ajax({
+                    type: "post",
+                    url: "/permission/updatePermission",
+                    data: JSON.stringify(data.field),
+                    dataType: "json",
+                    contentType: "application/json;charset=UTF-8",
+                    success: function (result) {
+                        layer.msg(result.msg, {
+                                time: 500 //0.5秒关闭（如果不配置，默认是3秒）
+                            },
+                            function(){
+                                //do something
+                                //当你在iframe页面关闭自身时
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index); //再执行关闭
+                            });
+                    },
+                    error:function (result) {
+                        layer.alert("更新权限失败");
+                    }
+                });
+            }
+            if(permissionName_status==2){
+                layer.alert("权限名已存在！");
+            }
+            if (url_status==2){
+                layer.alert("url已存在！");
+            }
+
 
             return false;
         });
+
+
+        $(function () {
+            //监听键盘弹起事件，查询权限名是否重复
+            $("#permissionName").change(function () {
+                var name=$('#permissionName').val();
+                var data={"permissionName":name};
+                $.ajax({
+                    type: "POST",
+                    url:"/permission/checkPermissionName",
+                    data:data,
+                    success:function (result) {
+                        if (result.code==1){
+                            permissionName_status=result.code;
+                            layer.msg(result.msg);
+                            $("#permissionName_status").css({"color":"green"});
+                            $('#permissionName_status').html(result.msg);
+                        }
+                        if (result.code==2){
+                            permissionName_status=result.code;
+                            layer.msg(result.msg);
+                            $("#permissionName_status").css({"color":"red"});
+                            $('#permissionName_status').html(result.msg);
+                        }
+                    }
+                });
+            });
+
+            //监听键盘弹起事件，查询url是否重复
+            $("#url").change(function () {
+                var name=$('#url').val();
+                var data={"url":name};
+                $.ajax({
+                    type: "POST",
+                    url:"/permission/checkUrl",
+                    data:data,
+                    success:function (result) {
+                        if (result.code==1){
+                            url_status=result.code;
+                            layer.msg(result.msg);
+                            $("#url_status").css({"color":"green"});
+                            $('#url_status').html(result.msg);
+                        }
+                        if (result.code==2){
+                            url_status=result.code;
+                            layer.msg(result.msg);
+                            $("#url_status").css({"color":"red"});
+                            $('#url_status').html(result.msg);
+                        }
+                    }
+                });
+            });
+
+            //重置
+            $("#rest").click(function () {
+                permissionName_status=1;
+                url_status=1;
+                $('#permissionName_status').html("");
+                $('#url_status').html("");
+            });
+        });
+
     });
 </script>
 </body>

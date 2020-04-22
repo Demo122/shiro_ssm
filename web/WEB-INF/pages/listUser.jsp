@@ -136,7 +136,7 @@
                 layer.open({
                     type: 2,
                     fix: false, //不固定
-                    area: ['700px', '500px'],
+                    area: ['700px', '550px'],
                     maxmin: true,
                     shadeClose: true,
                     shade: 0.4,

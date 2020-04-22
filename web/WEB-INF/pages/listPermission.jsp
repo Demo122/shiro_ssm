@@ -22,8 +22,7 @@
 
 <div class="layui-container layui-col-md10" style="margin-top: 20px;">
     <div class="layui-row">
-        <button type="button" class="layui-btn layui-btn-normal" id="addPermissionPage"><i class="layui-icon"></i>添加权限
-        </button>
+
     </div>
     <div class="layui-row">
         <table class="layui-hide" id="permissionTable" lay-filter="demo"></table>
@@ -32,6 +31,9 @@
 
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addPermissionPage">
+            <i class="layui-icon"></i>添加权限
+        </button>
         <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="deleteSelectPermission">全部删除</button>
     </div>
 </script>
@@ -166,31 +168,27 @@
                             layer.alert("删除失败");
                         }
                     });
+                    break;
+                case 'addPermissionPage':
+                    layer.open({
+                        type: 2,
+                        fix: false, //不固定
+                        area: ['700px', '500px'],
+                        maxmin: true,
+                        shadeClose: true,
+                        shade: 0.4,
+                        title: '添加权限',
+                        // content: '../../static/pages/addUser.jsp'
+                        content: '/permission/addPermissionPage',
+                        //end - 层销毁后触发的回调
+                        end: function () {
+                            //重载表格
+                            table.reload('permissionTable');
+                        }
+                    });
             };
         });
 
-        $(function () {
-            $("#addPermissionPage").click(function () {
-                var url = '/permission/addPermissionPage';
-                layer.open({
-                    type: 2,
-                    fix: false, //不固定
-                    area: ['700px', '500px'],
-                    maxmin: true,
-                    shadeClose: true,
-                    shade: 0.4,
-                    title: '添加权限',
-                    // content: '../../static/pages/addUser.jsp'
-                    content: url,
-                    //end - 层销毁后触发的回调
-                    end: function () {
-                        //重载表格
-                        table.reload('permissionTable');
-                    }
-                });
-            });
-
-        });
 
     });
 

@@ -92,9 +92,6 @@
                 }
             },
             permission_url: function (value, item) { //value：表单的值、item：表单的DOM对象
-                if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
-                    return '权限名不能有特殊字符';
-                }
                 if (/[\u4e00-\u9fa5]/.test(value)) {
                     return 'url中不能包含中文';
                 }

@@ -23,8 +23,9 @@
         <div class="layui-form-item">
             <label class="layui-form-label">用户名</label>
             <div class="layui-input-inline">
-                <input type="text" name="name" value="${user.name}" required  lay-verify="username" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input type="text" name="name" id="username" value="${user.name}" required  lay-verify="username" placeholder="请输入标题" autocomplete="off" class="layui-input">
             </div>
+            <div class="layui-form-mid " id="ussername_status"></div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">密码</label>
@@ -69,7 +70,7 @@
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button type="reset" class="layui-btn layui-btn-primary" id="rest">重置</button>
             </div>
         </div>
     </form>
@@ -80,6 +81,7 @@
     //Demo
     layui.use('form', function () {
         var form = layui.form;
+        var ussername_status=0;  //用户名是否可以用
 
 
         //自定义的验证
@@ -138,29 +140,86 @@
             //创建json数据对象
             var jsonData={"user":data.field,"roleIds":roleIdsJSON};
             // layer.msg(JSON.stringify(data.field));
-            $.ajax({
-                type: "POST",
-                url: "/user/updateUser",
-                data: JSON.stringify(jsonData),
-                dataType: "json",
-                contentType: "application/json;charset=UTF-8",
-                success: function (result) {
-                    layer.msg(result.msg, {
-                            time: 300 //0.5秒关闭（如果不配置，默认是3秒）
-                        },
-                        function(){
-                            //do something
-                            //当你在iframe页面关闭自身时
-                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            parent.layer.close(index); //再执行关闭
-                        });
-                },
-                error:function (result) {
-                    layer.alert("更新用户失败");
-                }
-            });
+
+            if (ussername_status==1){
+                $.ajax({
+                    type: "POST",
+                    url: "/user/updateUser",
+                    data: JSON.stringify(jsonData),
+                    dataType: "json",
+                    contentType: "application/json;charset=UTF-8",
+                    success: function (result) {
+                        if(result.code==1){
+                            layer.msg(result.msg, {
+                                    time: 300 //0.5秒关闭（如果不配置，默认是3秒）
+                                },
+                                function(){
+                                    //do something
+                                    //当你在iframe页面关闭自身时
+                                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                    parent.layer.close(index); //再执行关闭
+                                });
+                        }
+                        if (result.code==2){
+                            layer.alert(result.msg);
+                        }
+                    },
+                    error:function (result) {
+                        layer.alert("更新用户失败");
+                    }
+                });
+            }
+            if (ussername_status==2){
+                layer.alert("用户名已存在！");
+            }
+
 
             return false;
+        });
+
+
+        //监听键盘弹起事件，查询用户名是否重复
+        $(function () {
+            //原始名字
+            var originalName=$('#username').val();
+            $("#username").change(function () {
+                var name=$('#username').val();
+                var data={"username":name};
+
+                if(name==originalName){
+                    console.log("没有修改!");
+                    ussername_status=1;
+                    $('#ussername_status').html("");
+
+                }else {
+                    $.ajax({
+                        type: "POST",
+                        url:"/user/checkUsername",
+                        data:data,
+                        success:function (result) {
+                            if (result.code==1){
+                                ussername_status=result.code;
+                                layer.msg(result.msg);
+                                $("#ussername_status").css({"color":"green"});
+                                $('#ussername_status').html(result.msg);
+                            }
+                            if (result.code==2){
+                                ussername_status=result.code;
+                                layer.msg(result.msg);
+                                $("#ussername_status").css({"color":"red"});
+                                $('#ussername_status').html(result.msg);
+                            }
+                        }
+                    });
+                }
+
+            });
+
+            $("#rest").click(function () {
+                ussername_status=1;
+                $('#ussername_status').html("");
+
+            });
         });
     });
 </script>

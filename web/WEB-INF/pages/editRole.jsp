@@ -120,6 +120,8 @@
 
             $("#rest").click(function () {
                 roleName_status=1;
+                $('#roleName_status').html("");
+
             });
         });
     });
