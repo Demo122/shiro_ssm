@@ -7,13 +7,33 @@ package com.danqing.pojo;
 public class searchBean {
     private String searchItem;
     private String searchContent;
+    private int page;
+    private int nums;
 
     @Override
     public String toString() {
         return "searchBean{" +
                 "searchItem='" + searchItem + '\'' +
                 ", searchContent='" + searchContent + '\'' +
+                ", page=" + page +
+                ", nums=" + nums +
                 '}';
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getNums() {
+        return nums;
+    }
+
+    public void setNums(int nums) {
+        this.nums = nums;
     }
 
     public String getSearchItem() {
