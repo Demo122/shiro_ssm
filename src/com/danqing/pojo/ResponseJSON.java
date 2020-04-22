@@ -8,6 +8,24 @@ public class ResponseJSON {
     private int code;
     private String msg;
     private String url;
+    private Object data;
+    private int dataCount;
+
+    public int getDataCount() {
+        return dataCount;
+    }
+
+    public void setDataCount(int dataCount) {
+        this.dataCount = dataCount;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
 
     public String getUrl() {
         return url;
@@ -32,4 +50,6 @@ public class ResponseJSON {
     public void setMsg(String msg) {
         this.msg = msg;
     }
+
+
 }
