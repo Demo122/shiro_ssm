@@ -66,10 +66,6 @@ public class PermissionController {
             count=permissionService.getTotalSelectByMenu(searchBean.getSearchContent());
         }
 
-        for (Permission datum : data) {
-            System.out.println(datum);
-        }
-
 
         //为什么设为0呢，应为layui的table异步请求成功的code要求是0.。。。。。。，否则就是请求失败 有点子坑呀
         res.setCode(0);
@@ -83,6 +79,9 @@ public class PermissionController {
     @ResponseBody
     @RequestMapping("listPermission")
     public String list(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "nums", defaultValue = "10") int nums) {
+
+        System.out.println(page+"--"+nums);
+
         //使用pageHelper分页
         PageHelper.startPage(page, nums);
         //再查找
