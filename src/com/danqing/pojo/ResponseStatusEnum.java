@@ -5,6 +5,7 @@ package com.danqing.pojo;
  * Created by danqing on 2020/4/20 16:42
  */
 public enum ResponseStatusEnum {
+    No_ACCOUNT(-2),    //没有该用户
     NO_Authority(-1),  //没有授权
     NOT_ENABLE(0),     //被禁用，没有开启
     Do_SUCCESSFUL(1),  //操作成功

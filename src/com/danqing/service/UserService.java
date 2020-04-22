@@ -9,6 +9,8 @@ public interface UserService {
 
     public User getByName(String name);
 
+    public User getByEmail(String email);
+
     public List<User> list();
 
     public void add(User user);

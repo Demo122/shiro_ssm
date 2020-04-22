@@ -23,7 +23,7 @@
     <div id="darkbannerwrap"></div>
 
     <form class="layui-form" method="post" action="login">
-        <input name="name" placeholder="用户名" value="zhang3" type="text" lay-verify="required" class="layui-input">
+        <input name="name" placeholder="用户名 | 邮箱" value="11@qq.com" type="text" lay-verify="required" class="layui-input">
         <hr class="hr15">
         <input name="password" lay-verify="required" placeholder="密码" value="12345" type="password" class="layui-input">
         <hr class="hr15">

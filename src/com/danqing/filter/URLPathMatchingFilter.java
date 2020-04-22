@@ -3,7 +3,9 @@ package com.danqing.filter;
 import com.alibaba.fastjson.JSON;
 import com.danqing.pojo.ResponseJSON;
 import com.danqing.pojo.ResponseStatusEnum;
+import com.danqing.pojo.User;
 import com.danqing.service.PermissionService;
+import com.danqing.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
@@ -19,6 +21,9 @@ import java.util.Set;
 public class URLPathMatchingFilter extends PathMatchingFilter {
     @Autowired
     PermissionService permissionService;
+
+    @Autowired
+    UserService userService;
 
     @Override
     protected boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue)
@@ -43,7 +48,16 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
             //在权限表
             boolean hasPermission = false;
             String userName = subject.getPrincipal().toString();
-            Set<String> permissionUrls = permissionService.listPermissionURLs(userName);
+
+            //通过subject.getPrincipal()获取的可能是username，也可能是email
+            //需要进行如下判断
+            User user=userService.getByName(userName);
+            //查找为null,说明不是username,则一定是email
+            if(null==user){
+                user=userService.getByEmail(userName);
+            }
+
+            Set<String> permissionUrls = permissionService.listPermissionURLs(user.getName());
             for (String url : permissionUrls) {
                 // 这就表示当前用户有这个权限
                 if (url.equals(requestURI)) {
@@ -55,6 +69,7 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
             if (hasPermission)
                 return true;
             else {
+                System.out.println("请求："+requestURI+"--已被拦截");
                 UnauthorizedException ex = new UnauthorizedException("当前用户没有访问路径 " + requestURI + " 的权限");
 
                 //获取请求头，判断是不是ajax请求
