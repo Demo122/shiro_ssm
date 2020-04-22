@@ -88,6 +88,11 @@ public class UserController {
         return JSONObject.toJSON(res).toString();
     }
 
+    /**
+     * 删除选中的用户
+     * @param ids
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "deleteSelectUser", method = RequestMethod.DELETE)
     public String deleteSelectUser(@RequestBody List<Long> ids) {
@@ -120,16 +125,35 @@ public class UserController {
     public String update(@RequestBody UserExt userExt) {
 //        System.out.println(userExt.toString());
 //        //使用map来接受多对象参数，或者使用包装类
-        User user=userExt.getUser();
 
+        //返回json数据对象
+        ResponseJSON res=new ResponseJSON();
+
+        //1.获取浏览器传过来的user
+        User user=userExt.getUser();
+        //2.获取传来的 需要更改的的角色ID
         long[] roleIds=userExt.getRoleIds().getIds();
 //
         System.out.println(user.toString()+"--"+roleIds.toString());
-        //设置用户角色
-        userRoleService.setRoles(user, roleIds);
 
+        //3.根据userId获取该用户在数据库中的信息
+        User userInDB =userService.get(user.getId());
+
+        //4.判断用户名是否修改
+        // 如果修改了，需要检查下新的用户名是否和数据库中的其他用户名重复，要保证用户名的唯一性
+        if (!user.getName().equals(userInDB.getName())){
+            User hasSameNameUser=userService.getByName(user.getName());
+            //如果数据库中已存在拥有该用户名的用户，则更新用户信息失败，返回失败信息
+            if (null!=hasSameNameUser){
+                res.setCode(ResponseStatusEnum.Do_FAIELD.getStatus());
+                res.setMsg("更新失败，用户名已存在！");
+                return JSONObject.toJSON(res).toString();
+            }
+        }
+
+        //5.判断用户密码是否修改
         //获取数据库中的密码，
-        String password = userService.get(user.getId()).getPassword();
+        String password = userInDB.getPassword();
         //如果不一样，说明密码修改了，重新生成盐和加密后的密码
         if (!user.getPassword().equals(password)) {
             String salt = new SecureRandomNumberGenerator().nextBytes().toString();
@@ -139,14 +163,16 @@ public class UserController {
             user.setSalt(salt);
             user.setPassword(encodedPassword);
         }
-        // 如果传过来的密码和数据中的一样，那就没有修改密码
 
+        //6.更新用户信息
         userService.update(user);
-        Map<String,Object> res=new HashMap<>();
-        res.put("msg","更新成功！");
 
+        //7.更新用户角色
+        userRoleService.setRoles(user, roleIds);
+
+        res.setCode(ResponseStatusEnum.Do_SUCCESSFUL.getStatus());
+        res.setMsg("更新成功！");
         return JSONObject.toJSON(res).toString();
-
     }
 
     @RequestMapping("addUserPage")
