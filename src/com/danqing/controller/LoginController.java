@@ -4,7 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.danqing.pojo.ResponseJSON;
 import com.danqing.pojo.ResponseStatusEnum;
 import com.danqing.pojo.User;
+import com.danqing.realm.DatabaseRealm;
+import com.danqing.realm.LoginByEmailCodeRealm;
 import com.danqing.service.UserService;
+import com.danqing.util.GenerateVerifyCode;
+import com.danqing.util.SendEmail;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -40,6 +44,23 @@ public class LoginController {
 //        System.out.println(user.toString());
         //创建返回json的对象
         ResponseJSON res = new ResponseJSON();
+        UsernamePasswordToken token=null;
+        /**
+         * 如果使用邮箱验证码登录，这里传的字段是 email和activeCode
+         *  故user.getname为空则为使用邮箱验证码登录
+         *  然后将eamil字段赋给自身的naem ,activeCode给password
+         *     这样可以复用判断是否禁用的代码
+         */
+
+        if (user.getName()==null){
+           //使用邮箱验证码登录
+            //把email值给name,方便检查有没有被禁用
+            user.setName(user.getEmail());
+            token=new UsernamePasswordToken(user.getEmail(),user.getActiveCode(), LoginByEmailCodeRealm.class.getName());
+        }else {
+           token = new UsernamePasswordToken(user.getName(), user.getPassword(), DatabaseRealm.class.getName());
+        }
+
 
         //1.先根据name查找到status,判断该账号是否启用
         //如果没有启用,转发到error方法，返回json数据提示
@@ -59,7 +80,7 @@ public class LoginController {
 
         //如果启用了在进行认证操作
         Subject subject = SecurityUtils.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken(user.getName(), user.getPassword());
+
         try {
             subject.login(token);
             //shiro的这个session和httpsession是串通好了的
@@ -110,5 +131,46 @@ public class LoginController {
             return byUserName.getStatus();
         }
     }
+
+
+
+
+    @ResponseBody
+    @RequestMapping(value = "sendVerifyCode",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    public String sendVerifyCode(String email){
+        ResponseJSON res=new ResponseJSON();
+
+        //1.根据邮箱，从数据库中查找该用户
+        User user=userService.getByEmail(email);
+        if (user==null){
+            //邮箱输入错误，没有该用户
+            res.setCode(ResponseStatusEnum.No_ACCOUNT.getStatus());
+            res.setMsg("没有该用户！");
+        }else{
+            try{
+                //有该用户
+                //2.生成验证码，并存入数据库
+                String verifyCode= GenerateVerifyCode.getVerifyCode();
+                user.setActiveCode(verifyCode);
+                userService.update(user);
+
+                //3.发送邮件
+                SendEmail.sendEmailCode(email,verifyCode);
+
+                res.setCode(ResponseStatusEnum.Do_SUCCESSFUL.getStatus());
+                res.setMsg("验证码发送成功！");
+            }catch (Exception e){
+
+                res.setCode(ResponseStatusEnum.Do_FAIELD.getStatus());
+                res.setMsg("验证码发送失败！");
+            }
+
+
+        }
+
+
+        return JSONObject.toJSON(res).toString();
+    }
+
 
 }
