@@ -90,7 +90,16 @@
 
     <!-- 安全管理器 -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-        <property name="realm" ref="databaseRealm" />
+        <!--        为了指定对应的realm进行操作-->
+        <property name="authenticator" ref="authenticator"/>
+        <!--    可以配置多个realm-->
+        <property name="realms">
+            <list>
+                <ref bean="databaseRealm"/>
+                <ref bean="LoginByEmailCodeRealm"/>
+            </list>
+        </property>
+
         <property name="sessionManager" ref="sessionManager" />
     </bean>
     <!-- 相当于调用SecurityUtils.setSecurityManager(securityManager) -->
@@ -111,6 +120,12 @@
     <bean id="databaseRealm" class="com.danqing.realm.DatabaseRealm">
         <property name="credentialsMatcher" ref="credentialsMatcher"/>
     </bean>
+    <bean id="LoginByEmailCodeRealm" class="com.danqing.realm.LoginByEmailCodeRealm"/>
+
+<!--    配置使用自定义利器，可以实现多realm认证-->
+
+    <bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator"/>
+
 
     <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
