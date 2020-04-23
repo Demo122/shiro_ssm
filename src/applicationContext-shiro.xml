@@ -37,6 +37,7 @@
             <value>
                 <!-- anon表示此地址不需要任何权限即可访问 -->
                 /login=anon
+                /sendVerifyCode=anon
 <!--                /index=anon-->
                 /static/**=anon
                 <!-- 只对业务功能进行权限管理，权限配置本身不需要没有做权限要求，这样做是为了不让初学者混淆 -->
