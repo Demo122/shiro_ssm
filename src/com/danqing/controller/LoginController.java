@@ -133,8 +133,11 @@ public class LoginController {
     }
 
 
-
-
+    /**
+     * 发送邮箱验证码
+     * @param email
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "sendVerifyCode",method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     public String sendVerifyCode(String email){
@@ -165,9 +168,7 @@ public class LoginController {
                 res.setMsg("验证码发送失败！");
             }
 
-
         }
-
 
         return JSONObject.toJSON(res).toString();
     }
