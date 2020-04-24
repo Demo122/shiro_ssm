@@ -180,14 +180,15 @@
                             layer.msg(res.msg, {
                                 time: 500
                             });
+                            //把倒计时存入cookie
+                            $.cookie("total",60);
+                            timekeeping();
                         }
                         if (res.code == 2) {
                             //失败
                             layer.alert(res.msg);
                         }
-                        //把倒计时存入cookie
-                        $.cookie("total",60);
-                        timekeeping();
+
                     }
                 });
             });
