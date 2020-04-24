@@ -73,6 +73,10 @@ public class UserController {
 //        System.out.println(id);
         ResponseJSON res=new ResponseJSON();
         try {
+            if (id==1){
+                //是管理员用户 不能删除
+                throw new Exception("管理员用户，不能删除！");
+            }
             //1.删除用户
             userService.delete(id);
             //2.删除与该用户关联的角色
@@ -82,7 +86,7 @@ public class UserController {
             res.setMsg("删除成功");
         } catch (Exception e) {
             res.setCode(ResponseStatusEnum.Do_FAIELD.getStatus());
-            res.setMsg("删除失败");
+            res.setMsg(e.getMessage());
         }
         return JSONObject.toJSON(res).toString();
     }
@@ -100,6 +104,10 @@ public class UserController {
         try {
             //删除选中用户
             for (Long id : ids) {
+                if (id==1){
+                    //是管理员用户 不能删除
+                    continue;
+                }
                 //1.删除用户
                 userService.delete(id);
                 //2.删除与该用户关联的角色

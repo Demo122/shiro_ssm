@@ -30,8 +30,7 @@
     <mvc:default-servlet-handler/>
 
 
-    <bean
-            class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass"
                   value="org.springframework.web.servlet.view.JstlView"/>
         <property name="prefix" value="/WEB-INF/pages/"/>
@@ -39,8 +38,7 @@
     </bean>
 
     <!--启用shiro注解 -->
-    <bean
-            class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
             depends-on="lifecycleBeanPostProcessor">
         <property name="proxyTargetClass" value="true"/>
     </bean>
