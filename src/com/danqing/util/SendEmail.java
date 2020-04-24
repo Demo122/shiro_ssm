@@ -4,6 +4,7 @@ package com.danqing.util;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 /**
@@ -45,8 +46,8 @@ public class SendEmail {
             // 创建默认的 MimeMessage 对象
             MimeMessage message = new MimeMessage(session);
 
-            // Set From: 头部头字段
-            message.setFrom(new InternetAddress(from));
+            // Set From: 头部头字段 发件人昵称和字符集
+            message.setFrom(new InternetAddress(from,"权限管理系统","UTF-8"));
 
             // Set To: 头部头字段
             message.addRecipient(Message.RecipientType.TO,
@@ -61,7 +62,7 @@ public class SendEmail {
             // 发送消息
             Transport.send(message);
             System.out.println("Sent message successfully....");
-        }catch (MessagingException mex) {
+        }catch (MessagingException | UnsupportedEncodingException mex) {
             mex.printStackTrace();
         }
     }
