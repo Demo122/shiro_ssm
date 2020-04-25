@@ -27,21 +27,27 @@ public class SendEmail {
         // 指定发送邮件的主机为 smtp.163.com
         String host = "smtp.163.com";  // 邮件服务器
 
-        // 获取系统属性
-        Properties properties = System.getProperties();
+
+        final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+
+        //设置邮件会话参数
+        Properties properties = new Properties();
 
         // 设置邮件服务器
         properties.setProperty("mail.smtp.host", host);
-
+        properties.setProperty("mail.smtp.socketFactory.class", SSL_FACTORY);
+        properties.setProperty("mail.smtp.socketFactory.fallback", "false");
+        //邮箱发送服务器端口,这里设置为465端口
+        properties.setProperty("mail.smtp.port", "465");
+        properties.setProperty("mail.smtp.socketFactory.port", "465");
         properties.put("mail.smtp.auth", "true");
+
         // 获取默认session对象
-        Session session = Session.getDefaultInstance(properties,new Authenticator(){
-            public PasswordAuthentication getPasswordAuthentication()
-            {
-                return new PasswordAuthentication("gdanqing964@163.com", "ROCEUNLHHQVKECBL"); //发件人邮件用户名、授权码
+        Session session = Session.getDefaultInstance(properties,new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("gdanqing964@163.com", "ROCEUNLHHQVKECBL");
             }
         });
-
         try{
             // 创建默认的 MimeMessage 对象
             MimeMessage message = new MimeMessage(session);
