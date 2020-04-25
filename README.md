@@ -1,5 +1,6 @@
 # shiro_ssm
-使用ssm+shiro+layui的权限管理系统
+使用ssm+shiro+layui的权限管理系统 
+[演示地址](http://47.115.62.234:8080)
 
 # 功能
 ## 登录模块
