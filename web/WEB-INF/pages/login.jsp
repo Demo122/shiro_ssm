@@ -20,11 +20,11 @@
 <body class="login-bg">
 
 <div class="login">
-    <div class="message">后台管理</div>
-    <div class="layui-tab layui-tab-brief" lay-filter="test1">
+    <div class="message">权限管理</div>
+    <div class="layui-tab layui-tab-brief" lay-filter="loginWay">
         <ul class="layui-tab-title">
-            <li class="layui-this" lay-id="111">账户密码登录</li>
-            <li lay-id="222">邮箱验证码登录</li>
+            <li class="layui-this" lay-id="1">账户密码登录</li>
+            <li lay-id="2">邮箱验证码登录</li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
@@ -143,12 +143,12 @@
 
 
         //获取hash来切换选项卡，假设当前地址的hash为lay-id对应的值
-        var layid = location.hash.replace(/^#test1=/, '');
+        var layid = location.hash.replace(/^#loginWay=/, '');
         element.tabChange('test1', layid); //假设当前地址为：http://a.com#test1=222，那么选项卡会自动切换到“发送消息”这一项
 
         //监听Tab切换，以改变地址hash值
-        element.on('tab(test1)', function () {
-            location.hash = 'test1=' + this.getAttribute('lay-id');
+        element.on('tab(loginWay)', function () {
+            location.hash = 'loginWay=' + this.getAttribute('lay-id');
         });
 
         $(function () {
